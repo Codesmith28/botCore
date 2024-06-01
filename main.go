@@ -126,10 +126,33 @@ func msgHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 }
 
+func reactionAddHandler(s *discordgo.Session, r *discordgo.MessageReactionAdd) {
+	if r.Emoji.Name == "👀" {
+		s.GuildMemberRoleAdd(r.GuildID, r.UserID, "1246462722669809715")
+		s.ChannelMessageSend(
+			r.ChannelID,
+			fmt.Sprintf("%v has been given the role of %v", r.UserID, r.Emoji.Name),
+		)
+	}
+}
+
+func reactionRemoveHandler(s *discordgo.Session, r *discordgo.MessageReactionRemove) {
+	if r.Emoji.Name == "👀" {
+		s.GuildMemberRoleRemove(r.GuildID, r.UserID, "1246462722669809715")
+		s.ChannelMessageSend(
+			r.ChannelID,
+			fmt.Sprintf("%v has been removed from the role of %v", r.UserID, r.Emoji.Name),
+		)
+	}
+}
+
 func main() {
 	// Create a new Discord session using the token from config
 	sess, err := discordgo.New("Bot " + config.Token)
 	checkNilErr(err)
+
+	sess.AddHandler(reactionAddHandler)
+	sess.AddHandler(reactionRemoveHandler)
 
 	sess.AddHandler(msgHandler)
 	sess.Identify.Intents = discordgo.IntentsAllWithoutPrivileged
