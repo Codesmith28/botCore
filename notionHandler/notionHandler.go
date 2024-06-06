@@ -34,7 +34,6 @@ func QueryDatabase(client *notionapi.Client) {
 		props, err := json.MarshalIndent(page.Properties, "", " ")
 		checkNilErr(err)
 		fmt.Println(string(props))
-		fmt.Println()
 	}
 }
 
