@@ -5,9 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/dstotijn/go-notion"
-
 	"github.com/Codesmith28/botCore/config"
+	"github.com/jomei/notionapi"
 )
 
 var (
@@ -22,11 +21,10 @@ func checkNilErr(err error) {
 }
 
 func NotionConnect() {
-	client := notion.NewClient(secret)
+	client := notionapi.NewClient(notionapi.Token(secret))
 
-	// connect to db:
-	db, err := client.FindDatabaseByID(context.Background(), databaseID)
+	database, err := client.Database.Get(context.Background(), notionapi.DatabaseID(databaseID))
 	checkNilErr(err)
 
-	fmt.Println(db.URL)
+	fmt.Println("Title: ", database.Title)
 }
