@@ -2,11 +2,13 @@ package notionHandler
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 
-	"github.com/Codesmith28/botCore/config"
 	"github.com/jomei/notionapi"
+
+	"github.com/Codesmith28/botCore/config"
 )
 
 var (
@@ -20,11 +22,23 @@ func checkNilErr(err error) {
 	}
 }
 
-func NotionConnect() {
-	client := notionapi.NewClient(notionapi.Token(secret))
-
-	database, err := client.Database.Get(context.Background(), notionapi.DatabaseID(databaseID))
+func QueryDatabase(client *notionapi.Client) {
+	res, err := client.Database.Query(
+		context.Background(),
+		notionapi.DatabaseID(databaseID),
+		&notionapi.DatabaseQueryRequest{},
+	)
 	checkNilErr(err)
 
-	fmt.Println("Title: ", database.Title)
+	for _, page := range res.Results {
+		props, err := json.MarshalIndent(page.Properties, "", " ")
+		checkNilErr(err)
+		fmt.Println(string(props))
+		fmt.Println()
+	}
+}
+
+func NotionConnect() {
+	client := notionapi.NewClient(notionapi.Token(secret))
+	QueryDatabase(client)
 }
