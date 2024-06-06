@@ -11,7 +11,7 @@ import (
 
 	"github.com/Codesmith28/botCore/config"
 	"github.com/Codesmith28/botCore/handlers"
-	notionhandler "github.com/Codesmith28/botCore/notionHandler"
+	"github.com/Codesmith28/botCore/notionHandler"
 )
 
 func checkNilErr(err error) {
@@ -22,7 +22,7 @@ func checkNilErr(err error) {
 
 func main() {
 	// integrate notion here
-	notionhandler.NotionConnect()
+	notionHandler.NotionConnect()
 
 	// Create a new Discord session using the token from config
 	sess, err := discordgo.New("Bot " + config.Token)
@@ -39,6 +39,6 @@ func main() {
 
 	// Wait for termination signal
 	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
 }

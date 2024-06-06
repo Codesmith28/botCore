@@ -1,4 +1,4 @@
-package notionhandler
+package notionHandler
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 
 var (
 	secret     = config.NotionSecret
-	databaseID = "your-database-id"
+	databaseID = config.DatabaseId
 )
 
 func checkNilErr(err error) {
