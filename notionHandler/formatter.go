@@ -1,57 +1,57 @@
 package notionHandler
 
 import (
-	"encoding/json"
-
-	"github.com/jomei/notionapi"
+	"fmt"
+	"time"
 )
 
 type Task struct {
-	ID        string   `json:"id"`
-	Title     string   `json:"title"`
-	Status    string   `json:"status"`
-	DueDate   string   `json:"due_date"`
-	CreatedAt string   `json:"created_at"`
-	Assignees []string `json:"assignees"`
-	DaysLeft  int      `json:"days_left"`
+	ID        string    `json:"id"`
+	Title     string    `json:"title"`
+	Status    string    `json:"status"`
+	DueDate   time.Time `json:"due_date"`
+	CreatedAt time.Time `json:"created_at"`
+	Assignees []string  `json:"assignees"`
+	DaysLeft  int       `json:"days_left"`
 }
 
-type NotionPage struct {
-	ID    notionapi.PageID `json:"id"`
-	Type  string           `json:"type"`
-	Title []struct {
-		Text struct {
-			Content string `json:"content"`
-		} `json:"text"`
-	} `json:"title"`
-	Properties map[string]interface{} `json:"properties"`
-}
+func Formatter(data map[string]interface{}) Task {
+	var task Task
 
-// format the json data into a list of Task struct
+	// Extracting ID and Title
+	task.ID = data["Task"].(map[string]interface{})["id"].(string)
+	task.Title = data["Task"].(map[string]interface{})["title"].([]interface{})[0].(map[string]interface{})["text"].(map[string]interface{})["content"].(string)
 
-// given a string of list of json data, return a list of Task struct
-func FormatData(jsonList string) []Task {
-	var tasks []Task
+	// Extracting Status
+	task.Status = data["state"].(map[string]interface{})["formula"].(map[string]interface{})["string"].(string)
 
-	// convert jsonList to a list of NotionPage struct
-	var pages []NotionPage
-	json.Unmarshal([]byte(jsonList), &pages)
-
-	// iterate through the list of NotionPage struct
-	for _, page := range pages {
-		// create a new Task struct
-		var task Task
-		task.ID = string(page.ID)
-		task.Title = page.Title[0].Text.Content
-		task.Status = page.Properties["Status"].(string)
-		task.DueDate = page.Properties["Due Date"].(string)
-		task.CreatedAt = page.Properties["Created At"].(string)
-		task.Assignees = page.Properties["Assignees"].([]string)
-		task.DaysLeft = page.Properties["Days Left"].(int)
-
-		// append the Task struct to the list of tasks
-		tasks = append(tasks, task)
+	// Extracting DueDate
+	if due, ok := data["Due"].(map[string]interface{})["date"].(map[string]interface{}); ok {
+		if due["start"] != nil {
+			dueDate, _ := time.Parse(time.RFC3339, due["start"].(string))
+			task.DueDate = dueDate
+		}
 	}
 
-	return tasks
+	// Extracting CreatedAt
+	if created, ok := data["Created"].(map[string]interface{})["created_time"].(string); ok {
+		createdAt, _ := time.Parse(time.RFC3339, created)
+		task.CreatedAt = createdAt
+	}
+
+	// Extracting Assignees
+	if assigneeData, ok := data["Assignee"].(map[string]interface{}); ok {
+		for _, assignee := range assigneeData["people"].([]interface{}) {
+			task.Assignees = append(task.Assignees, assignee.(map[string]interface{})["name"].(string))
+		}
+	}
+
+	// Extracting DaysLeft
+	if daysLeft, ok := data["Days left"].(map[string]interface{})["formula"].(map[string]interface{})["number"].(float64); ok {
+		task.DaysLeft = int(daysLeft)
+	}
+
+	fmt.Println("task -> ", task)
+
+	return task
 }

@@ -3,7 +3,6 @@ package notionHandler
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/jomei/notionapi"
@@ -13,7 +12,8 @@ import (
 
 var (
 	secret     = config.NotionSecret
-	databaseID = config.DatabaseId
+	databaseID = config.DatabaseId // Fixed the variable name
+	Tasklist   []Task
 )
 
 func checkNilErr(err error) {
@@ -25,7 +25,7 @@ func checkNilErr(err error) {
 func QueryDatabase(client *notionapi.Client) {
 	res, err := client.Database.Query(
 		context.Background(),
-		notionapi.DatabaseID(databaseID),
+		notionapi.DatabaseID(databaseID), // Added notionapi.DatabaseID() to avoid type mismatch
 		&notionapi.DatabaseQueryRequest{},
 	)
 	checkNilErr(err)
@@ -34,25 +34,17 @@ func QueryDatabase(client *notionapi.Client) {
 		props, err := json.MarshalIndent(page.Properties, "", " ")
 		checkNilErr(err)
 
-		// convert props to json:
-		// fmt.Println(string(props))
-
-		// convert props to map:
+		// Convert props to map
 		var propMap map[string]interface{}
 		err = json.Unmarshal(props, &propMap)
 		checkNilErr(err)
 
-		// data := FormatData(string(props))
-		// fmt.Println(data)
-
-		// print map in well formatted way
-
-		for key, value := range propMap {
-			fmt.Println(key, ":", value)
-		}
-
-		fmt.Printf("===================================== \n\n")
+		task := Formatter(propMap)
+		_ = task
 	}
+
+	// print the Tasklist -> it is empty rn...
+	// fmt.Println(Tasklist)
 }
 
 func NotionConnect() {
