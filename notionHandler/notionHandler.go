@@ -3,6 +3,7 @@ package notionHandler
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 
 	"github.com/jomei/notionapi"
@@ -40,11 +41,29 @@ func QueryDatabase(client *notionapi.Client) {
 		checkNilErr(err)
 
 		task := Formatter(propMap)
-		_ = task
+
+		// empty task safety check
+		if task.Title == "" {
+			continue
+		}
+
+		Tasklist = append(Tasklist, task)
 	}
 
-	// print the Tasklist -> it is empty rn...
-	// fmt.Println(Tasklist)
+	// print the tasklist in formatted way
+	for _, task := range Tasklist {
+		fmt.Println("task id:", task.ID)
+		fmt.Println("task title:", task.Title)
+		fmt.Println("task status:", task.Status)
+		fmt.Println("Days left: ", task.DaysLeft)
+		fmt.Println("task due date:", task.DueDate)
+		fmt.Println("Assignees:")
+		for _, assignee := range task.Assignees {
+			fmt.Println("\t ->", assignee)
+		}
+
+		fmt.Println()
+	}
 }
 
 func NotionConnect() {

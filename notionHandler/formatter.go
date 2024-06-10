@@ -1,7 +1,6 @@
 package notionHandler
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -17,6 +16,11 @@ type Task struct {
 
 func Formatter(data map[string]interface{}) Task {
 	var task Task
+
+	// if the done property is true, then return an empty Task
+	if data["Done"].(map[string]interface{})["checkbox"].(bool) {
+		return task
+	}
 
 	// Extracting ID and Title
 	task.ID = data["Task"].(map[string]interface{})["id"].(string)
@@ -42,7 +46,10 @@ func Formatter(data map[string]interface{}) Task {
 	// Extracting Assignees
 	if assigneeData, ok := data["Assignee"].(map[string]interface{}); ok {
 		for _, assignee := range assigneeData["people"].([]interface{}) {
-			task.Assignees = append(task.Assignees, assignee.(map[string]interface{})["name"].(string))
+			task.Assignees = append(
+				task.Assignees,
+				assignee.(map[string]interface{})["name"].(string),
+			)
 		}
 	}
 
@@ -51,7 +58,7 @@ func Formatter(data map[string]interface{}) Task {
 		task.DaysLeft = int(daysLeft)
 	}
 
-	fmt.Println("task -> ", task)
+	// fmt.Println("task -> ", task)
 
 	return task
 }
