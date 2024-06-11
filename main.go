@@ -10,7 +10,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 
 	"github.com/Codesmith28/botCore/config"
-	"github.com/Codesmith28/botCore/handlers"
+	"github.com/Codesmith28/botCore/discordHandler"
 	"github.com/Codesmith28/botCore/notionHandler"
 )
 
@@ -29,7 +29,7 @@ func main() {
 	checkNilErr(err)
 
 	// Open the session
-	handlers.BotHandler(sess)
+	discordHandler.BotHandler(sess)
 
 	err = sess.Open()
 	checkNilErr(err)
