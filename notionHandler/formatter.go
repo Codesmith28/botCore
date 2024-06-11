@@ -5,13 +5,13 @@ import (
 )
 
 type Task struct {
-	ID        string    `json:"id"`
-	Title     string    `json:"title"`
-	Status    string    `json:"status"`
-	DueDate   time.Time `json:"due_date"`
-	CreatedAt time.Time `json:"created_at"`
-	Assignees []string  `json:"assignees"`
-	DaysLeft  int       `json:"days_left"`
+	ID        string   `json:"id"`
+	Title     string   `json:"title"`
+	Status    string   `json:"status"`
+	DueDate   string   `json:"due_date"`
+	CreatedAt string   `json:"created_at"`
+	Assignees []string `json:"assignees"`
+	DaysLeft  int      `json:"days_left"`
 }
 
 func Formatter(data map[string]interface{}) Task {
@@ -33,14 +33,18 @@ func Formatter(data map[string]interface{}) Task {
 	if due, ok := data["Due"].(map[string]interface{})["date"].(map[string]interface{}); ok {
 		if due["start"] != nil {
 			dueDate, _ := time.Parse(time.RFC3339, due["start"].(string))
-			task.DueDate = dueDate
+			formattedDueDate := dueDate.Format("Jan 2 2006")
+			task.DueDate = formattedDueDate
+			// Format the due date as "Mon Jan 2 15:04:05 2006"
 		}
 	}
 
 	// Extracting CreatedAt
 	if created, ok := data["Created"].(map[string]interface{})["created_time"].(string); ok {
 		createdAt, _ := time.Parse(time.RFC3339, created)
-		task.CreatedAt = createdAt
+		formattedCreatedAt := createdAt.Format("2006-01-02 15:04:05")
+		task.CreatedAt = formattedCreatedAt
+		// Format the created date as "2006-01-02 15:04:05"
 	}
 
 	// Extracting Assignees
