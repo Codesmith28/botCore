@@ -7,12 +7,12 @@ import (
 
 	"github.com/jomei/notionapi"
 
-	"github.com/Codesmith28/botCore/config"
+	"github.com/Codesmith28/botCore/internal"
 )
 
 var (
-	secret     = config.NotionSecret
-	databaseID = config.DatabaseId // Fixed the variable name
+	secret     = internal.NotionSecret
+	databaseID = internal.DatabaseId // Fixed the variable name
 	Tasklist   []Task
 )
 

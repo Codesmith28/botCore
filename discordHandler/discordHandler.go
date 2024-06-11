@@ -8,11 +8,11 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-type Answers struct {
-	OriginChannelId string
-	FavFood         string
-	FavGame         string
-}
+// type Answers struct {
+// 	OriginChannelId string
+// 	FavFood         string
+// 	FavGame         string
+// }
 
 func checkNilErr(err error) {
 	if err != nil {

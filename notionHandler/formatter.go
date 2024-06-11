@@ -2,17 +2,11 @@ package notionHandler
 
 import (
 	"time"
+
+	"github.com/Codesmith28/botCore/internal"
 )
 
-type Task struct {
-	ID        string   `json:"id"`
-	Title     string   `json:"title"`
-	Status    string   `json:"status"`
-	DueDate   string   `json:"due_date"`
-	CreatedAt string   `json:"created_at"`
-	Assignees []string `json:"assignees"`
-	DaysLeft  int      `json:"days_left"`
-}
+type Task = internal.Task
 
 func Formatter(data map[string]interface{}) Task {
 	var task Task
@@ -35,7 +29,6 @@ func Formatter(data map[string]interface{}) Task {
 			dueDate, _ := time.Parse(time.RFC3339, due["start"].(string))
 			formattedDueDate := dueDate.Format("Jan 2 2006")
 			task.DueDate = formattedDueDate
-			// Format the due date as "Mon Jan 2 15:04:05 2006"
 		}
 	}
 
@@ -44,7 +37,6 @@ func Formatter(data map[string]interface{}) Task {
 		createdAt, _ := time.Parse(time.RFC3339, created)
 		formattedCreatedAt := createdAt.Format("2006-01-02 15:04:05")
 		task.CreatedAt = formattedCreatedAt
-		// Format the created date as "2006-01-02 15:04:05"
 	}
 
 	// Extracting Assignees
@@ -61,8 +53,6 @@ func Formatter(data map[string]interface{}) Task {
 	if daysLeft, ok := data["Days left"].(map[string]interface{})["formula"].(map[string]interface{})["number"].(float64); ok {
 		task.DaysLeft = int(daysLeft)
 	}
-
-	// fmt.Println("task -> ", task)
 
 	return task
 }

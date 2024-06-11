@@ -9,8 +9,8 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 
-	"github.com/Codesmith28/botCore/config"
 	"github.com/Codesmith28/botCore/discordHandler"
+	"github.com/Codesmith28/botCore/internal"
 	"github.com/Codesmith28/botCore/notionHandler"
 )
 
@@ -24,8 +24,8 @@ func main() {
 	// integrate notion here
 	notionHandler.NotionConnect()
 
-	// Create a new Discord session using the token from config
-	sess, err := discordgo.New("Bot " + config.Token)
+	// Create a new Discord session using the token from internal/config
+	sess, err := discordgo.New("Bot " + internal.Token)
 	checkNilErr(err)
 
 	// Open the session

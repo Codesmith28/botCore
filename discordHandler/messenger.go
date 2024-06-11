@@ -3,18 +3,11 @@ package discordHandler
 import (
 	"fmt"
 
+	"github.com/Codesmith28/botCore/internal"
 	"github.com/Codesmith28/botCore/notionHandler"
 )
 
-type Message struct {
-	Title     string   `json:"title,omitempty"`
-	Message   string   `json:"message,omitempty"`
-	DueDate   string   `json:"due_date,omitempty"`
-	Assignees []string `json:"assignees,omitempty"`
-	DaysLeft  int      `json:"days_left,omitempty"`
-}
-
-// to map notion name to their discord id so as to send messages with mention
+type Message = internal.Message
 
 var MemberMap = map[string]string{
 	"Sarthak Siddhpura":        "1018820365021098074",
