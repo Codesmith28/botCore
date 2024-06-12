@@ -6,6 +6,8 @@ import (
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
+
+	"github.com/Codesmith28/botCore/internal"
 )
 
 // type Answers struct {
@@ -149,7 +151,7 @@ func checkNilErr(err error) {
 // do not take any input from the user, just send the messages
 
 func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
-	channelID := "1245364054533603376"
+	channelID := internal.ChannelId
 
 	// Get the message list
 	MsgList := MessageMaker()
@@ -179,9 +181,6 @@ func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 }
 
 func BotHandler(sess *discordgo.Session) {
-	MsgList := MessageMaker()
-	_ = MsgList
-
 	sess.AddHandler(TaskMessageHandler)
 	sess.Identify.Intents = discordgo.IntentsAllWithoutPrivileged
 }
