@@ -1,5 +1,7 @@
 package internal
 
+import "time"
+
 type Task struct {
 	ID        string   `json:"id"`
 	Title     string   `json:"title"`
@@ -16,4 +18,9 @@ type Message struct {
 	DueDate   string   `json:"due_date,omitempty"`
 	Assignees []string `json:"assignees,omitempty"`
 	DaysLeft  int      `json:"days_left,omitempty"`
+}
+
+type LastSentRecord struct {
+	ID        string    `bson:"id"`
+	Timestamp time.Time `bson:"timestamp"`
 }

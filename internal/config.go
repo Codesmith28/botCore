@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var (
@@ -12,6 +13,10 @@ var (
 	DatabaseId   string
 	NotionSecret string
 	ChannelId    string
+
+	MongoURI        string
+	MongoClient     *mongo.Client
+	MongoCollection *mongo.Collection
 )
 
 func init() {
@@ -24,24 +29,29 @@ func init() {
 	NotionSecret = os.Getenv("NOTION_SECRET")
 	DatabaseId = os.Getenv("NOTION_DATABASE_ID")
 	ChannelId = os.Getenv("DISCORD_CHANNEL_ID")
+	MongoURI = os.Getenv("MONGO_URI")
 
 	checkEnvVar()
 }
 
 func checkEnvVar() {
-	if Token == "" {
-		log.Fatal("Discord bot token not found in .env file")
+	envVars := map[string]string{
+		"Discord bot token": Token,
+		"NotionSecret":      NotionSecret,
+		"DatabaseId":        DatabaseId,
+		"ChannelId":         ChannelId,
+		"MongoURI":          MongoURI,
 	}
 
-	if NotionSecret == "" {
-		log.Fatal("NotionSecret not found in .env file")
+	for name, value := range envVars {
+		if value == "" {
+			log.Fatalf("%s not found in .env file", name)
+		}
 	}
+}
 
-	if DatabaseId == "" {
-		log.Fatal("DatabaseId not found in .env file")
-	}
-
-	if ChannelId == "" {
-		log.Fatal("ChannelId not found in .env file")
+func checkNilErr(err error) {
+	if err != nil {
+		log.Fatal(err)
 	}
 }
