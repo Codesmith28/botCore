@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -23,6 +24,11 @@ func checkNilErr(err error) {
 func main() {
 	// integrate notion here
 	notionHandler.NotionConnect()
+
+	// connect to mongoDB
+	err := internal.InitMongo()
+	checkNilErr(err)
+	defer internal.MongoClient.Disconnect(context.TODO())
 
 	// Create a new Discord session using the token from config
 	sess, err := discordgo.New("Bot " + internal.Token)

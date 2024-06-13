@@ -22,7 +22,7 @@ func InitMongo() error {
 // read the last sent:
 func ReadLastSent() (time.Time, error) {
 	var record LastSentRecord
-	err := MongoCollection.FindOne(context.Background(), nil).Decode(&record)
+	err := MongoCollection.FindOne(context.TODO(), bson.M{"_id": "lastSent"}).Decode(&record)
 
 	if err == mongo.ErrNoDocuments {
 		return time.Time{}, nil
@@ -33,7 +33,7 @@ func ReadLastSent() (time.Time, error) {
 	return record.Timestamp, nil
 }
 
-// Update the last sent:
+// Update the last sent
 func WriteLastSent(t time.Time) error {
 	_, err := MongoCollection.UpdateOne(context.TODO(),
 		bson.M{"_id": "lastSent"},
