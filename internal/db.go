@@ -33,6 +33,7 @@ func ReadLastSent() (time.Time, error) {
 	return record.Timestamp, nil
 }
 
+// Update the last sent:
 func WriteLastSent(t time.Time) error {
 	_, err := MongoCollection.UpdateOne(context.TODO(),
 		bson.M{"_id": "lastSent"},

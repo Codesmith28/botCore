@@ -24,7 +24,7 @@ func main() {
 	// integrate notion here
 	notionHandler.NotionConnect()
 
-	// Create a new Discord session using the token from internal/config
+	// Create a new Discord session using the token from config
 	sess, err := discordgo.New("Bot " + internal.Token)
 	checkNilErr(err)
 
