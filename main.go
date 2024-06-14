@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 
@@ -42,6 +43,19 @@ func main() {
 
 	defer sess.Close()
 	fmt.Println("Bot is running...")
+
+	// Set up a ticker to run the TaskMessageHandler every minute
+	ticker := time.NewTicker(1 * time.Minute)
+	defer ticker.Stop()
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				discordHandler.TaskMessageHandler(sess, nil)
+			}
+		}
+	}()
 
 	// Wait for termination signal
 	sc := make(chan os.Signal, 1)

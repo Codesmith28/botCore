@@ -23,50 +23,44 @@ func checkNilErr(err error) {
 func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 	channelID := internal.ChannelId
 
-	for {
-		lastSent, err := internal.ReadLastSent()
-		checkNilErr(err)
+	lastSent, err := internal.ReadLastSent()
+	checkNilErr(err)
 
-		now := time.Now()
-		if now.Sub(lastSent) < 24*time.Hour {
-			log.Println("Message already sent today, sleeping...")
-			time.Sleep(1 * time.Hour) // Sleep for an hour and check again
-			continue
-		}
-
-		// Get the message list
-		MsgList := MessageMaker()
-
-		for _, message := range MsgList {
-			// Prepare the mentions
-			var mentions []string
-			for _, assignee := range message.Assignees {
-				if discordID, exists := MemberMap[assignee]; exists {
-					// Use <@USER_ID> format for mentioning
-					mentions = append(mentions, fmt.Sprintf("<@%s>", discordID))
-				}
-			}
-
-			// Construct the message with mentions
-			content := fmt.Sprintf("## %s\n %s\nDays Left: %d\nAssignees: %s",
-				message.Title,
-				message.Message,
-				message.DaysLeft,
-				strings.Join(mentions, " "),
-			)
-
-			// Send the message to the channel
-			_, err := sess.ChannelMessageSend(channelID, content)
-			checkNilErr(err)
-		}
-
-		// update the lastSent
-		err = internal.WriteLastSent(now)
-		checkNilErr(err)
-
-		// Sleep for 24 hours
-		time.Sleep(24 * time.Hour)
+	now := time.Now()
+	if now.Sub(lastSent) < 24*time.Hour {
+		log.Println("Message already sent today, skipping...")
+		return
 	}
+
+	// Get the message list
+	MsgList := MessageMaker()
+
+	for _, message := range MsgList {
+		// Prepare the mentions
+		var mentions []string
+		for _, assignee := range message.Assignees {
+			if discordID, exists := MemberMap[assignee]; exists {
+				// Use <@USER_ID> format for mentioning
+				mentions = append(mentions, fmt.Sprintf("<@%s>", discordID))
+			}
+		}
+
+		// Construct the message with mentions
+		content := fmt.Sprintf("## %s\n %s\nDays Left: %d\nAssignees: %s",
+			message.Title,
+			message.Message,
+			message.DaysLeft,
+			strings.Join(mentions, " "),
+		)
+
+		// Send the message to the channel
+		_, err := sess.ChannelMessageSend(channelID, content)
+		checkNilErr(err)
+	}
+
+	// update the lastSent
+	err = internal.WriteLastSent(now)
+	checkNilErr(err)
 }
 
 func BotHandler(sess *discordgo.Session) {
