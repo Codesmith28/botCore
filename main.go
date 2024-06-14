@@ -40,8 +40,8 @@ func main() {
 
 	err = sess.Open()
 	checkNilErr(err)
-
 	defer sess.Close()
+
 	fmt.Println("Bot is running...")
 
 	// Set up a ticker to run the TaskMessageHandler every minute
@@ -61,4 +61,6 @@ func main() {
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
+
+	fmt.Println("Shutting down bot gracefully...")
 }
