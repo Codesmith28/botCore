@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
@@ -20,6 +21,11 @@ func checkNilErr(err error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+// healthCheckHandler responds with a simple "OK" to indicate the server is running
+func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "OK")
 }
 
 func main() {
@@ -57,10 +63,25 @@ func main() {
 		}
 	}()
 
+	// Set up a simple HTTP server
+	http.HandleFunc("/", healthCheckHandler)
+	server := &http.Server{Addr: ":8080"}
+
+	go func() {
+		if err := server.ListenAndServe(); err != http.ErrServerClosed {
+			log.Fatalf("HTTP server ListenAndServe: %v", err)
+		}
+	}()
+
 	// Wait for termination signal
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-sc
 
-	fmt.Println("Shutting down bot gracefully...")
+	fmt.Println("Shutting down bot and HTTP server gracefully...")
+
+	// Gracefully shut down the HTTP server
+	if err := server.Shutdown(context.Background()); err != nil {
+		log.Fatalf("HTTP server Shutdown: %v", err)
+	}
 }
