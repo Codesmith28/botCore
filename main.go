@@ -52,7 +52,7 @@ func main() {
 	fmt.Println("Bot is running...")
 
 	// Set up a ticker to run the TaskMessageHandler every minute
-	ticker := time.NewTicker(1 * time.Minute)
+	ticker := time.NewTicker(30 * time.Second)
 	defer ticker.Stop()
 
 	go func() {
