@@ -25,6 +25,7 @@ func checkNilErr(err error) {
 
 // healthCheckHandler responds with a simple "OK" to indicate the server is running
 func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	log.Println("Health check endpoint accessed")
 	fmt.Fprintln(w, "OK")
 }
 
@@ -76,12 +77,23 @@ func main() {
 	// Wait for termination signal
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	<-sc
 
-	fmt.Println("Shutting down bot and HTTP server gracefully...")
+	// Block until a signal is received
+	sig := <-sc
+	fmt.Printf("Received signal %v, shutting down...\n", sig)
 
-	// Gracefully shut down the HTTP server
-	if err := server.Shutdown(context.Background()); err != nil {
+	// Shutdown the HTTP server gracefully
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("HTTP server Shutdown: %v", err)
 	}
+
+	// Close Discord session gracefully
+	fmt.Println("Closing Discord session...")
+	if err := sess.Close(); err != nil {
+		log.Fatalf("Discord session Close: %v", err)
+	}
+
+	fmt.Println("Shutdown complete.")
 }
