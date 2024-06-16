@@ -9,12 +9,16 @@ import (
 
 type Message = internal.Message
 
+// map members to their discord id
 var MemberMap = map[string]string{
 	"Sarthak Siddhpura":        "1018820365021098074",
 	"Zeel Rajeshbhai Rajodiya": "610860696023859210",
 	"Jayraj Derasari":          "1122477840621912154",
 	"Rituben Piyushbhai Patel": "1039310594802720768",
 	"Dhrumi Prakash Panchal":   "1213076069960392774",
+	"Vansh Lilani":             "768739594598219788",
+	"Nirjara Jain":             "761260272743743509",
+	"Jainik Patel":             "1208651520707395584",
 }
 
 func MessageMaker() []Message {
@@ -44,17 +48,17 @@ func MessageMaker() []Message {
 	}
 
 	// print all the messages (CONSOLE):
+	fmt.Println("Message list as follows:")
 	for _, message := range MessageList {
 		fmt.Printf("Title: %s\n", message.Title)
 		fmt.Printf("Message: %s\n", message.Message)
 		fmt.Printf("Due Date: %s\n", message.DueDate)
 		fmt.Printf("Days Left: %d\n", message.DaysLeft)
-		// fmt.Printf("Assignees: %s\n", message.Assignees)
 		fmt.Println("Assignees: ")
 		for _, member := range message.Assignees {
 			fmt.Printf("\t -> %s\n", member)
 		}
-		fmt.Println("----------------------------------------------------")
+		fmt.Println("------------------------------------------------------")
 	}
 
 	return MessageList

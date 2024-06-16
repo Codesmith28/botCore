@@ -48,6 +48,21 @@ func QueryDatabase(client *notionapi.Client) {
 
 		Tasklist = append(Tasklist, task)
 	}
+
+	// print all the tasks (CONSOLE):
+	// log.Println("Task list as follows:")
+	// for _, task := range Tasklist {
+	// 	log.Printf("Title: %s\n", task.Title)
+	// 	log.Printf("Status: %s\n", task.Status)
+	// 	log.Printf("Due Date: %s\n", task.DueDate)
+	// 	log.Printf("Created At: %s\n", task.CreatedAt)
+	// 	log.Println("Assignees: ")
+	// 	for _, assignee := range task.Assignees {
+	// 		log.Printf("\t -> %s\n", assignee)
+	// 	}
+	// 	log.Printf("Days Left: %d\n", task.DaysLeft)
+	// 	log.Println("------------------------------------------------------")
+	// }
 }
 
 func NotionConnect() {

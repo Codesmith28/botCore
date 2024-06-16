@@ -44,7 +44,6 @@ func main() {
 
 	// Open the session
 	discordHandler.BotHandler(sess)
-
 	err = sess.Open()
 	checkNilErr(err)
 	defer sess.Close()
