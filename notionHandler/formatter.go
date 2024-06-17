@@ -1,6 +1,7 @@
 package notionHandler
 
 import (
+	"log"
 	"time"
 
 	"github.com/Codesmith28/botCore/internal"
@@ -8,51 +9,86 @@ import (
 
 type Task = internal.Task
 
-func Formatter(data map[string]interface{}) Task {
+func Formatter(data map[string]interface{}) *Task {
+	// Check if task is marked as done
+	doneData, ok := data["Done"].(map[string]interface{})
+	if ok && doneData["status"] != nil {
+		status := doneData["status"].(map[string]interface{})["name"].(string)
+		if status == "Done" {
+			return nil // Return nil to skip this task
+		}
+	}
+
 	var task Task
 
-	// if the done property is true, then return an empty Task
-	if data["Done"].(map[string]interface{})["checkbox"].(bool) {
-		return task
-	}
-
-	// Extracting ID and Title
-	task.ID = data["Task"].(map[string]interface{})["id"].(string)
-	task.Title = data["Task"].(map[string]interface{})["title"].([]interface{})[0].(map[string]interface{})["text"].(map[string]interface{})["content"].(string)
-
-	// Extracting Status
-	task.Status = data["state"].(map[string]interface{})["formula"].(map[string]interface{})["string"].(string)
-
-	// Extracting DueDate
-	if due, ok := data["Due"].(map[string]interface{})["date"].(map[string]interface{}); ok {
-		if due["start"] != nil {
-			dueDate, _ := time.Parse(time.RFC3339, due["start"].(string))
-			formattedDueDate := dueDate.Format("Jan 2 2006")
-			task.DueDate = formattedDueDate
+	// Extract ID and Title
+	if taskData, ok := data["Task"].(map[string]interface{}); ok {
+		task.ID = taskData["id"].(string)
+		if titleArray, ok := taskData["title"].([]interface{}); ok && len(titleArray) > 0 {
+			if titleMap, ok := titleArray[0].(map[string]interface{}); ok {
+				if textContent, ok := titleMap["text"].(map[string]interface{}); ok {
+					task.Title = textContent["content"].(string)
+				}
+			}
 		}
 	}
 
-	// Extracting CreatedAt
-	if created, ok := data["Created"].(map[string]interface{})["created_time"].(string); ok {
-		createdAt, _ := time.Parse(time.RFC3339, created)
-		formattedCreatedAt := createdAt.Format("2006-01-02 15:04:05")
-		task.CreatedAt = formattedCreatedAt
+	// Extract Status
+	if stateData, ok := data["state"].(map[string]interface{}); ok {
+		if formulaData, ok := stateData["formula"].(map[string]interface{}); ok {
+			if status, ok := formulaData["string"].(string); ok {
+				task.Status = status
+			}
+		}
 	}
 
-	// Extracting Assignees
+	// Extract DueDate
+	if dueData, ok := data["Due"].(map[string]interface{}); ok {
+		if dateData, ok := dueData["date"].(map[string]interface{}); ok {
+			if start, ok := dateData["start"].(string); ok {
+				dueDate, err := time.Parse(time.RFC3339, start)
+				if err == nil {
+					task.DueDate = dueDate.Format("Jan 2 2006")
+				} else {
+					log.Printf("Error parsing DueDate: %v\n", err)
+				}
+			}
+		}
+	}
+
+	// Extract CreatedAt
+	if createdData, ok := data["Created"].(map[string]interface{}); ok {
+		if createdTime, ok := createdData["created_time"].(string); ok {
+			createdAt, err := time.Parse(time.RFC3339, createdTime)
+			if err == nil {
+				task.CreatedAt = createdAt.Format("2006-01-02 15:04:05")
+			} else {
+				log.Printf("Error parsing CreatedAt: %v\n", err)
+			}
+		}
+	}
+
+	// Extract Assignees
 	if assigneeData, ok := data["Assignee"].(map[string]interface{}); ok {
-		for _, assignee := range assigneeData["people"].([]interface{}) {
-			task.Assignees = append(
-				task.Assignees,
-				assignee.(map[string]interface{})["name"].(string),
-			)
+		if people, ok := assigneeData["people"].([]interface{}); ok {
+			for _, person := range people {
+				if personMap, ok := person.(map[string]interface{}); ok {
+					if name, ok := personMap["name"].(string); ok {
+						task.Assignees = append(task.Assignees, name)
+					}
+				}
+			}
 		}
 	}
 
-	// Extracting DaysLeft
-	if daysLeft, ok := data["Days left"].(map[string]interface{})["formula"].(map[string]interface{})["number"].(float64); ok {
-		task.DaysLeft = int(daysLeft)
+	// Extract DaysLeft
+	if daysLeftData, ok := data["Days left"].(map[string]interface{}); ok {
+		if formulaData, ok := daysLeftData["formula"].(map[string]interface{}); ok {
+			if daysLeft, ok := formulaData["number"].(float64); ok {
+				task.DaysLeft = int(daysLeft)
+			}
+		}
 	}
 
-	return task
+	return &task
 }

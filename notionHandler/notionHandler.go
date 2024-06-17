@@ -13,7 +13,7 @@ import (
 var (
 	secret     = internal.NotionSecret
 	databaseID = internal.DatabaseId // Fixed the variable name
-	Tasklist   []Task
+	Tasklist   []*Task
 )
 
 func checkNilErr(err error) {
@@ -25,7 +25,7 @@ func checkNilErr(err error) {
 func QueryDatabase(client *notionapi.Client) {
 	res, err := client.Database.Query(
 		context.Background(),
-		notionapi.DatabaseID(databaseID), // Added notionapi.DatabaseID() to avoid type mismatch
+		notionapi.DatabaseID(databaseID),
 		&notionapi.DatabaseQueryRequest{},
 	)
 	checkNilErr(err)
@@ -34,29 +34,28 @@ func QueryDatabase(client *notionapi.Client) {
 		props, err := json.MarshalIndent(page.Properties, "", " ")
 		checkNilErr(err)
 
-		// Convert props to map
 		var propMap map[string]interface{}
 		err = json.Unmarshal(props, &propMap)
 		checkNilErr(err)
 
 		task := Formatter(propMap)
 
-		// empty task safety check
-		if task.Title == "" {
+		// Skip tasks marked as done
+		if task == nil {
 			continue
 		}
 
 		Tasklist = append(Tasklist, task)
 	}
 
-	// print all the tasks (CONSOLE):
+	// Output all tasks
 	// log.Println("Task list as follows:")
 	// for _, task := range Tasklist {
 	// 	log.Printf("Title: %s\n", task.Title)
 	// 	log.Printf("Status: %s\n", task.Status)
 	// 	log.Printf("Due Date: %s\n", task.DueDate)
 	// 	log.Printf("Created At: %s\n", task.CreatedAt)
-	// 	log.Println("Assignees: ")
+	// 	log.Println("Assignees:")
 	// 	for _, assignee := range task.Assignees {
 	// 		log.Printf("\t -> %s\n", assignee)
 	// 	}
