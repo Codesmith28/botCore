@@ -40,7 +40,6 @@ func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 		var mentions []string
 		for _, assignee := range message.Assignees {
 			if discordID, exists := MemberMap[assignee]; exists {
-				// Use <@USER_ID> format for mentioning
 				mentions = append(mentions, fmt.Sprintf("<@%s>", discordID))
 			}
 		}
