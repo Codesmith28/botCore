@@ -17,9 +17,6 @@ func checkNilErr(err error) {
 	}
 }
 
-// take a msg from teh msglist, get all the assignee's discord id from map and then send the message to the channel with all mentions in 1 messsage
-// do not take any input from the user, just send the messages
-
 func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 	channelID := internal.ChannelId
 
