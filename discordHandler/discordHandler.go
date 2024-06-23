@@ -20,7 +20,7 @@ func checkNilErr(err error) {
 }
 
 func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
-	channelID := internal.ChannelId
+	channelID := internal.GeneralChannelId
 
 	lastSent, err := internal.ReadLastSent()
 	checkNilErr(err)
