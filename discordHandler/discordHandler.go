@@ -11,6 +11,8 @@ import (
 	"github.com/Codesmith28/botCore/internal"
 )
 
+var MemberMap = internal.MemberMap
+
 func checkNilErr(err error) {
 	if err != nil {
 		log.Fatal(err)
