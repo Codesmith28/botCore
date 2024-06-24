@@ -9,6 +9,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 
 	"github.com/Codesmith28/botCore/internal"
+	"github.com/Codesmith28/botCore/notionHandler"
 )
 
 var MemberMap = internal.MemberMap
@@ -25,13 +26,17 @@ func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 	lastSent, err := internal.ReadLastSent()
 	checkNilErr(err)
 
+	// // debug message list:
+	// MsgList := MessageMaker()
+
 	now := time.Now()
 	if now.Sub(lastSent) < 24*time.Hour {
 		log.Println("Message already sent today, skipping...")
 		return
 	}
 
-	// Get the message list
+	// query the database:
+	notionHandler.NotionConnect()
 	MsgList := MessageMaker()
 
 	for _, message := range MsgList {
