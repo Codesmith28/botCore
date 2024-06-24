@@ -14,11 +14,11 @@ var (
 	AnalyticsChannelId string
 	DatabaseId         string
 	NotionSecret       string
-	GAViewId           string
-	GACredentialsPath  string
-	MongoURI           string
-	MongoClient        *mongo.Client
-	MongoCollection    *mongo.Collection
+	// GAViewId           string
+	// GACredentialsPath  string
+	MongoURI        string
+	MongoClient     *mongo.Client
+	MongoCollection *mongo.Collection
 )
 
 func init() {
@@ -28,9 +28,9 @@ func init() {
 		"DISCORD_CHANNEL_ID_ANALYTICS": &AnalyticsChannelId,
 		"NOTION_SECRET":                &NotionSecret,
 		"NOTION_DATABASE_ID":           &DatabaseId,
-		"GA_VIEW_ID":                   &GAViewId,
-		"GA_CREDENTIALS_PATH":          &GACredentialsPath,
-		"MONGO_URI":                    &MongoURI,
+		// "GA_VIEW_ID":                   &GAViewId,
+		// "GA_CREDENTIALS_PATH":          &GACredentialsPath,
+		"MONGO_URI": &MongoURI,
 	}
 
 	loadEnvVars(envVars)
