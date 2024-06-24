@@ -10,23 +10,26 @@ import (
 
 var (
 	Token              string
-	DatabaseId         string
-	NotionSecret       string
 	GeneralChannelId   string
 	AnalyticsChannelId string
+	DatabaseId         string
+	NotionSecret       string
+	GAViewId           string
+	GACredentialsPath  string
 	MongoURI           string
-
-	MongoClient     *mongo.Client
-	MongoCollection *mongo.Collection
+	MongoClient        *mongo.Client
+	MongoCollection    *mongo.Collection
 )
 
 func init() {
 	envVars := map[string]*string{
 		"DISCORD_TOKEN":                &Token,
-		"NOTION_SECRET":                &NotionSecret,
-		"NOTION_DATABASE_ID":           &DatabaseId,
 		"DISCORD_CHANNEL_ID_GENERAL":   &GeneralChannelId,
 		"DISCORD_CHANNEL_ID_ANALYTICS": &AnalyticsChannelId,
+		"NOTION_SECRET":                &NotionSecret,
+		"NOTION_DATABASE_ID":           &DatabaseId,
+		"GA_VIEW_ID":                   &GAViewId,
+		"GA_CREDENTIALS_PATH":          &GACredentialsPath,
 		"MONGO_URI":                    &MongoURI,
 	}
 
