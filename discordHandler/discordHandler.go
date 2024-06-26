@@ -9,7 +9,6 @@ import (
 	"github.com/bwmarrin/discordgo"
 
 	"github.com/Codesmith28/botCore/internal"
-	"github.com/Codesmith28/botCore/notionHandler"
 )
 
 var MemberMap = internal.MemberMap
