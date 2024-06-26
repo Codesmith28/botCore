@@ -35,8 +35,6 @@ func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 		return
 	}
 
-	// query the database:
-	notionHandler.NotionConnect()
 	MsgList := MessageMaker()
 
 	for _, message := range MsgList {
