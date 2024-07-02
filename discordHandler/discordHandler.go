@@ -9,6 +9,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 
 	"github.com/Codesmith28/botCore/internal"
+	"github.com/Codesmith28/botCore/notionHandler"
 )
 
 var MemberMap = internal.MemberMap
@@ -34,6 +35,8 @@ func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 		return
 	}
 
+	// connect to notion now:
+	notionHandler.NotionConnect()
 	MsgList := MessageMaker()
 
 	for _, message := range MsgList {
