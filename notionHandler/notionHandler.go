@@ -50,6 +50,8 @@ func QueryDatabase(client *notionapi.Client) {
 }
 
 func NotionConnect() {
+	// clear tasklist:
+	Tasklist = nil
 	client := notionapi.NewClient(notionapi.Token(secret))
 	QueryDatabase(client)
 }
