@@ -16,7 +16,7 @@ type LastSentRecord = internal.LastSentRecord
 // read the last sent:
 func ReadLastSent() (time.Time, error) {
 	var record LastSentRecord
-	err := MongoCollection.FindOne(context.TODO(), bson.M{"_id": "lastSent"}).Decode(&record)
+	err := TimeStampCollection.FindOne(context.TODO(), bson.M{"_id": "lastSent"}).Decode(&record)
 
 	if err == mongo.ErrNoDocuments {
 		return time.Time{}, nil
@@ -29,7 +29,7 @@ func ReadLastSent() (time.Time, error) {
 
 // Update the last sent
 func WriteLastSent(t time.Time) error {
-	_, err := MongoCollection.UpdateOne(context.TODO(),
+	_, err := TimeStampCollection.UpdateOne(context.TODO(),
 		bson.M{"_id": "lastSent"},
 		bson.M{"$set": bson.M{"timestamp": t}},
 		options.Update().SetUpsert(true),

@@ -25,6 +25,13 @@ type LastSentRecord struct {
 	Timestamp time.Time `bson:"timestamp"`
 }
 
+type AnalyticsDataModel struct {
+	Timestamp      time.Time `bson:"timestamp"       omitempty:"timestamp"`
+	PageViews      int64     `bson:"page_views"      omitempty:"page_views"`
+	UniqueVisitors int64     `bson:"unique_visitors" omitempty:"unique_visitors"`
+	MessageId      string    `bson:"message_id"      omitempty:"message_id"`
+}
+
 // Map members to their Discord IDs
 var MemberMap = map[string]string{
 	"Sarthak Siddhpura":        "1018820365021098074",

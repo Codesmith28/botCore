@@ -11,9 +11,9 @@ import (
 )
 
 var (
-	MongoURI        string
-	MongoClient     *mongo.Client
-	MongoCollection *mongo.Collection
+	MongoURI            string
+	MongoClient         *mongo.Client
+	TimeStampCollection *mongo.Collection
 )
 
 func init() {
@@ -26,7 +26,7 @@ func InitMongo() error {
 	MongoClient, err = mongo.Connect(context.TODO(), options.Client().ApplyURI(MongoURI))
 	checkNilErr(err)
 
-	MongoCollection = MongoClient.Database("botCore").Collection("lastSent")
+	TimeStampCollection = MongoClient.Database("botCore").Collection("lastSent")
 	return nil
 }
 
