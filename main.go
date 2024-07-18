@@ -12,6 +12,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 
+	"github.com/Codesmith28/botCore/database"
 	"github.com/Codesmith28/botCore/discordHandler"
 	"github.com/Codesmith28/botCore/internal"
 )
@@ -30,9 +31,9 @@ func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	// connect to mongoDB
-	err := internal.InitMongo()
+	err := database.InitMongo()
 	checkNilErr(err)
-	defer internal.MongoClient.Disconnect(context.TODO())
+	defer database.MongoClient.Disconnect(context.TODO())
 
 	// Create a new Discord session using the token from config
 	sess, err := discordgo.New("Bot " + internal.Token)

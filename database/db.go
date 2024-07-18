@@ -1,13 +1,28 @@
-package internal
+package database
 
 import (
 	"context"
+	"log"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/Codesmith28/botCore/internal"
 )
+
+var (
+	MongoURI        string
+	MongoClient     *mongo.Client
+	MongoCollection *mongo.Collection
+)
+
+type LastSentRecord = internal.LastSentRecord
+
+func init() {
+	MongoURI = internal.MongoURI
+}
 
 // connnect to mongo db:
 func InitMongo() error {
@@ -41,4 +56,10 @@ func WriteLastSent(t time.Time) error {
 		options.Update().SetUpsert(true),
 	)
 	return err
+}
+
+func checkNilErr(err error) {
+	if err != nil {
+		log.Fatalf("Error: %v", err)
+	}
 }

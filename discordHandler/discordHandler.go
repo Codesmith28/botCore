@@ -8,6 +8,7 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 
+	"github.com/Codesmith28/botCore/database"
 	"github.com/Codesmith28/botCore/internal"
 	"github.com/Codesmith28/botCore/notionHandler"
 )
@@ -16,14 +17,14 @@ var MemberMap = internal.MemberMap
 
 func checkNilErr(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }
 
 func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 	channelID := internal.GeneralChannelId
 
-	lastSent, err := internal.ReadLastSent()
+	lastSent, err := database.ReadLastSent()
 	checkNilErr(err)
 
 	// // debug message list:
@@ -62,7 +63,7 @@ func TaskMessageHandler(sess *discordgo.Session, ready *discordgo.Ready) {
 	}
 
 	// update the lastSent
-	err = internal.WriteLastSent(now)
+	err = database.WriteLastSent(now)
 	checkNilErr(err)
 }
 
