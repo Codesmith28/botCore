@@ -14,6 +14,7 @@ var (
 	MongoURI            string
 	MongoClient         *mongo.Client
 	TimeStampCollection *mongo.Collection
+	AnalyticsCollection *mongo.Collection
 )
 
 func init() {
@@ -27,6 +28,7 @@ func InitMongo() error {
 	checkNilErr(err)
 
 	TimeStampCollection = MongoClient.Database("botCore").Collection("lastSent")
+	AnalyticsCollection = MongoClient.Database("botCore").Collection("analytics")
 	return nil
 }
 
