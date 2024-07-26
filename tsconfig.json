@@ -14,14 +14,12 @@
             "@/*": ["*"],
             "@database/*": ["database/*"],
             "@utils/*": ["utils/*"]
-        }
+        },
+        "skipLibCheck": true
     },
     "include": ["src/**/*"],
     "ts-node": {
         "esm": true,
         "experimentalSpecifierResolution": "node"
-    },
-    "paths": {
-        "events": ["node_modules/@types/node/events.d.ts"]
     }
 }
