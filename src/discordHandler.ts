@@ -73,6 +73,7 @@ export async function taskMessageHandler(client: Client) {
 
     const lastSent = await readLastSent();
     const now = new Date();
+
     if (now.getTime() - lastSent.getTime() < 24 * 60 * 60 * 1000) {
         console.log("Message already sent today, skipping...");
         return;
@@ -83,11 +84,8 @@ export async function taskMessageHandler(client: Client) {
 
     for (const message of msgList) {
         const mentions = getAssigneeMentions(message.assignees);
-        const content = `## ${message.title}\n
-                            ${message.message}\n
-                            Days Left: ${message.daysLeft}\n
-                            Assignees: ${mentions}`;
-        await channel.send(content);
+        const content = `## ${message.title}\n ${message.message}\n Days Left: ${message.daysLeft}\n Assignees: ${mentions}`;
+        //await channel.send(content);
     }
 
     await writeLastSent(now);
@@ -96,9 +94,8 @@ export async function taskMessageHandler(client: Client) {
 export function botHandler(client: Client) {
     client.once("ready", () => {
         console.log("Discord bot is ready!");
-        // Set up interval to run taskMessageHandler every 24 hours
-        setInterval(() => taskMessageHandler(client), 24 * 60 * 60 * 1000);
-        // Run taskMessageHandler immediately on startup
+        //setInterval(() => taskMessageHandler(client), 24 * 60 * 60 * 1000);
+        setInterval(() => taskMessageHandler(client), 5 * 1000);
         taskMessageHandler(client);
     });
 }

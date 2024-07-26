@@ -38,6 +38,9 @@ async function queryDatabase(): Promise<void> {
                 taskList.push(task);
             }
         }
+
+        // debugging:
+        console.log(taskList);
     } catch (error) {
         console.error("Error querying Notion database:", error);
     }
@@ -47,7 +50,6 @@ function formatter(page: PageObjectResponse): Task | null {
     try {
         const properties = page.properties;
 
-        // Assuming your Notion database has these properties
         const title = getPropertyValue(properties.Title, "title");
         const message = getPropertyValue(properties.Message, "rich_text");
         const dueDate = getPropertyValue(properties.DueDate, "date");
@@ -61,9 +63,9 @@ function formatter(page: PageObjectResponse): Task | null {
 
         const daysLeft = dueDate
             ? Math.ceil(
-                (new Date(dueDate).getTime() - Date.now()) /
-                (1000 * 60 * 60 * 24),
-            )
+                  (new Date(dueDate).getTime() - Date.now()) /
+                      (1000 * 60 * 60 * 24),
+              )
             : 0;
 
         return {
