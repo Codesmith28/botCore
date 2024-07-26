@@ -45,16 +45,16 @@ async function messageMaker(): Promise<Message[]> {
             };
 
             // Log each message
-            //console.log(`Title: ${fullMessage.title}`);
-            //console.log(`Message: ${fullMessage.message}`);
-            //console.log(`Days Left: ${fullMessage.daysLeft}`);
-            //console.log("Assignees:");
-            //fullMessage.assignees.forEach((assignee) =>
-            //    console.log(`\t -> ${assignee}`),
-            //);
-            //console.log(
-            //    "------------------------------------------------------",
-            //);
+            console.log(`Title: ${fullMessage.title}`);
+            console.log(`Message: ${fullMessage.message}`);
+            console.log(`Days Left: ${fullMessage.daysLeft}`);
+            console.log("Assignees:");
+            fullMessage.assignees.forEach((assignee) =>
+                console.log(`\t -> ${assignee}`),
+            );
+            console.log(
+                "------------------------------------------------------",
+            );
 
             return fullMessage;
         });
