@@ -1,11 +1,11 @@
 import { Client, TextChannel } from "discord.js";
 import { readLastSent, writeLastSent } from "./db.js";
 import { notionConnect, Task, getTaskList } from "./notion";
+import { DISCORD_CHANNEL_ID_GENERAL } from "./config.js";
+import { MemberMap } from "./utils/types.js";
 
-const generalChannelId = process.env.GENERAL_CHANNEL_ID;
-const memberMap: { [key: string]: string } = JSON.parse(
-    process.env.MEMBER_MAP || "{}",
-);
+const generalChannelId = DISCORD_CHANNEL_ID_GENERAL;
+const memberMap: { [key: string]: string } = MemberMap;
 
 interface Message extends Task {
     message: string;
@@ -17,7 +17,7 @@ function getAssigneeMentions(assignees: string[]): string {
             memberMap[assignee] ? `<@${memberMap[assignee]}>` : "",
         )
         .filter((mention) => mention !== "")
-        .join(", ");
+        .join(" ");
 }
 
 async function messageMaker(): Promise<Message[]> {
@@ -83,11 +83,10 @@ export async function taskMessageHandler(client: Client) {
 
     for (const message of msgList) {
         const mentions = getAssigneeMentions(message.assignees);
-        const content = `## ${message.title}
-${message.message}
-Days Left: ${message.daysLeft}
-Assignees: ${mentions}`;
-
+        const content = `## ${message.title}\n
+                            ${message.message}\n
+                            Days Left: ${message.daysLeft}\n
+                            Assignees: ${mentions}`;
         await channel.send(content);
     }
 
@@ -97,9 +96,9 @@ Assignees: ${mentions}`;
 export function botHandler(client: Client) {
     client.once("ready", () => {
         console.log("Discord bot is ready!");
-    });
-
-    client.on("messageCreate", async (message) => {
-        // Add any message handling logic here
+        // Set up interval to run taskMessageHandler every 24 hours
+        setInterval(() => taskMessageHandler(client), 24 * 60 * 60 * 1000);
+        // Run taskMessageHandler immediately on startup
+        taskMessageHandler(client);
     });
 }

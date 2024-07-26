@@ -3,11 +3,12 @@ import express from "express";
 import dotenv from "dotenv";
 import { botHandler, taskMessageHandler } from "./discordHandler";
 import { initMongo } from "./db";
+import { DISCORD_TOKEN, MONGO_URI } from "./config";
 
 dotenv.config();
 
-const token = process.env.DISCORD_TOKEN;
-const mongoUri = process.env.MONGO_URI;
+const token = DISCORD_TOKEN;
+const mongoUri = MONGO_URI;
 
 if (!token || !mongoUri) {
     console.error("Missing environment variables");
