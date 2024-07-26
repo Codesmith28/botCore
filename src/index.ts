@@ -1,6 +1,5 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import express from "express";
-import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 import { botHandler, taskMessageHandler } from "./discordHandler";
 import { initMongo } from "./db";

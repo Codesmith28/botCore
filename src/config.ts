@@ -26,7 +26,7 @@ function loadAndCheckEnvVars(): EnvVars {
         const value = process.env[key];
         if (!value) {
             throw new Error(
-                `${key} not found in environment variables or .env file`
+                `${key} not found in environment variables or .env file`,
             );
         }
         envVars[key] = value;
@@ -45,10 +45,3 @@ export const {
 
 export let MongoClient: typeof MongoDbClient;
 export let MongoCollection: Collection;
-
-export function checkNilErr(err: Error | null): void {
-    if (err) {
-        console.error(err);
-        process.exit(1);
-    }
-}
