@@ -12,12 +12,12 @@ if (!notionSecret || !databaseId) {
 
 export interface Task {
     title: string;
-    message: string;
-    daysLeft: number;
+    daysLeft: number | null;
     assignees: string[];
 }
 
 let taskList: Task[] = [];
+
 const notion = new Client({ auth: notionSecret });
 
 export async function notionConnect(): Promise<Task[]> {
@@ -32,15 +32,14 @@ async function queryDatabase(): Promise<void> {
             database_id: databaseId,
         });
 
+        console.log("Querying Notion database...");
+
         for (const page of response.results) {
             const task = formatter(page as PageObjectResponse);
             if (task) {
                 taskList.push(task);
             }
         }
-
-        // debugging:
-        console.log(taskList);
     } catch (error) {
         console.error("Error querying Notion database:", error);
     }
@@ -49,15 +48,18 @@ async function queryDatabase(): Promise<void> {
 function formatter(page: PageObjectResponse): Task | null {
     try {
         const properties = page.properties;
-
-        const title = getPropertyValue(properties.Title, "title");
-        const message = getPropertyValue(properties.Message, "rich_text");
-        const dueDate = getPropertyValue(properties.DueDate, "date");
-        const assignees = getPropertyValue(properties.Assignees, "people");
-        const status = getPropertyValue(properties.Status, "select");
+        const title = getPropertyValue(properties.Task, "title");
+        const dueDate = getPropertyValue(properties.Due, "date");
+        const assignees = getPropertyValue(properties.Assignee, "people") || [];
+        const status = getPropertyValue(properties.Done, "status");
 
         // Skip tasks marked as done
-        if (status?.toLowerCase() === "done") {
+        if (status?.name === "Done") {
+            return null;
+        }
+
+        // Skip if no due date present
+        if (!dueDate) {
             return null;
         }
 
@@ -66,13 +68,12 @@ function formatter(page: PageObjectResponse): Task | null {
                   (new Date(dueDate).getTime() - Date.now()) /
                       (1000 * 60 * 60 * 24),
               )
-            : 0;
+            : null;
 
         return {
-            title,
-            message,
+            title: title || "Untitled",
             daysLeft,
-            assignees: assignees || [],
+            assignees: assignees.map((assignee: any) => assignee.name),
         };
     } catch (error) {
         console.error("Error formatting Notion page:", error);
@@ -81,17 +82,17 @@ function formatter(page: PageObjectResponse): Task | null {
 }
 
 function getPropertyValue(property: any, type: string): any {
+    if (!property) return null;
+
     switch (type) {
         case "title":
-            return property?.title[0]?.plain_text || "";
-        case "rich_text":
-            return property?.rich_text[0]?.plain_text || "";
+            return property.title?.[0]?.plain_text || null;
         case "date":
-            return property?.date?.start || null;
+            return property.date?.start || null;
         case "people":
-            return property?.people?.map((person: any) => person.name) || [];
-        case "select":
-            return property?.select?.name || "";
+            return property.people || [];
+        case "status":
+            return property.status || null;
         default:
             return null;
     }

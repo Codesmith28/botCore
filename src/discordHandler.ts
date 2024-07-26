@@ -22,18 +22,21 @@ function getAssigneeMentions(assignees: string[]): string {
 
 async function messageMaker(): Promise<Message[]> {
     const tasklist = getTaskList();
-    console.log("Generating messages for tasks:");
+    //console.log("Generating messages for tasks:");
 
     const messageList: Message[] = tasklist
         .filter((task) => task.daysLeft !== undefined)
         .map((task) => {
-            let message: string;
-            if (task.daysLeft < 0) {
-                message = `Is overdue by ${-task.daysLeft} days`;
-            } else if (task.daysLeft <= 5) {
-                message = `Is pending and only ${task.daysLeft} days left`;
-            } else {
-                message = `Due in ${task.daysLeft} days`;
+            let message = "";
+
+            if (task.daysLeft !== null) {
+                if (task.daysLeft < 0) {
+                    message = `Is overdue by ${-task.daysLeft} days`;
+                } else if (task.daysLeft <= 5) {
+                    message = `Is pending and only ${task.daysLeft} days left`;
+                } else {
+                    message = `Due in ${task.daysLeft} days`;
+                }
             }
 
             const fullMessage: Message = {
@@ -42,16 +45,16 @@ async function messageMaker(): Promise<Message[]> {
             };
 
             // Log each message
-            console.log(`Title: ${fullMessage.title}`);
-            console.log(`Message: ${fullMessage.message}`);
-            console.log(`Days Left: ${fullMessage.daysLeft}`);
-            console.log("Assignees:");
-            fullMessage.assignees.forEach((assignee) =>
-                console.log(`\t -> ${assignee}`),
-            );
-            console.log(
-                "------------------------------------------------------",
-            );
+            //console.log(`Title: ${fullMessage.title}`);
+            //console.log(`Message: ${fullMessage.message}`);
+            //console.log(`Days Left: ${fullMessage.daysLeft}`);
+            //console.log("Assignees:");
+            //fullMessage.assignees.forEach((assignee) =>
+            //    console.log(`\t -> ${assignee}`),
+            //);
+            //console.log(
+            //    "------------------------------------------------------",
+            //);
 
             return fullMessage;
         });
@@ -74,10 +77,10 @@ export async function taskMessageHandler(client: Client) {
     const lastSent = await readLastSent();
     const now = new Date();
 
-    if (now.getTime() - lastSent.getTime() < 24 * 60 * 60 * 1000) {
-        console.log("Message already sent today, skipping...");
-        return;
-    }
+    //if (now.getTime() - lastSent.getTime() < 24 * 60 * 60 * 1000) {
+    //    console.log("Message already sent today, skipping...");
+    //    return;
+    //}
 
     await notionConnect();
     const msgList = await messageMaker();
