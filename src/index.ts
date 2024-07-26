@@ -1,6 +1,7 @@
 import { Client, GatewayIntentBits } from "discord.js";
 import express from "express";
 import dotenv from "dotenv";
+import "tsconfig-paths/register";
 import { botHandler, taskMessageHandler } from "./discordHandler";
 import { initMongo } from "./db";
 import { DISCORD_TOKEN, MONGO_URI } from "./config";

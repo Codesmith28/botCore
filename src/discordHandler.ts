@@ -77,6 +77,7 @@ export async function taskMessageHandler(client: Client) {
     const lastSent = await readLastSent();
     const now = new Date();
 
+    // normal message sending:
     //if (now.getTime() - lastSent.getTime() < 24 * 60 * 60 * 1000) {
     //    console.log("Message already sent today, skipping...");
     //    return;
@@ -97,7 +98,6 @@ export async function taskMessageHandler(client: Client) {
 export function botHandler(client: Client) {
     client.once("ready", () => {
         console.log("Discord bot is ready!");
-        //setInterval(() => taskMessageHandler(client), 24 * 60 * 60 * 1000);
         setInterval(() => taskMessageHandler(client), 5 * 1000);
         taskMessageHandler(client);
     });
