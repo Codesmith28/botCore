@@ -7,13 +7,10 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "strict": true,
-        "allowJs": true,
         "resolveJsonModule": true,
         "baseUrl": "./src",
         "paths": {
-            "@/*": ["*"],
-            "@database/*": ["database/*"],
-            "@utils/*": ["utils/*"]
+            "@/*": ["*"]
         },
         "skipLibCheck": true
     },
