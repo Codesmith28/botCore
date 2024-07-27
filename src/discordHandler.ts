@@ -1,15 +1,11 @@
 import { Client, TextChannel } from "discord.js";
 import { readLastSent, writeLastSent } from "./db.js";
-import { notionConnect, Task, getTaskList } from "./notion";
+import { notionConnect, getMsgList } from "./notion";
 import { DISCORD_CHANNEL_ID_GENERAL } from "./config.js";
-import { MemberMap } from "./utils/types.js";
+import { MemberMap, Message } from "./utils/types.js";
 
 const generalChannelId = DISCORD_CHANNEL_ID_GENERAL;
 const memberMap: { [key: string]: string } = MemberMap;
-
-interface Message extends Task {
-    message: string;
-}
 
 function getAssigneeMentions(assignees: string[]): string {
     return assignees
@@ -21,26 +17,26 @@ function getAssigneeMentions(assignees: string[]): string {
 }
 
 async function messageMaker(): Promise<Message[]> {
-    const tasklist = getTaskList();
-    //console.log("Generating messages for tasks:");
+    const msgList = getMsgList();
+    console.log("Generating messages for tasks:");
 
-    const messageList: Message[] = tasklist
-        .filter((task) => task.daysLeft !== undefined)
-        .map((task) => {
+    const messageList: Message[] = msgList
+        .filter((msg) => msg?.daysLeft !== undefined)
+        .map((msg) => {
             let message = "";
 
-            if (task.daysLeft !== null) {
-                if (task.daysLeft < 0) {
-                    message = `Is overdue by ${-task.daysLeft} days`;
-                } else if (task.daysLeft <= 5) {
-                    message = `Is pending and only ${task.daysLeft} days left`;
+            if (msg?.daysLeft !== null && msg?.daysLeft !== undefined) {
+                if (msg?.daysLeft < 0) {
+                    message = `Is overdue by ${-msg?.daysLeft} days`;
+                } else if (msg?.daysLeft <= 5) {
+                    message = `Is pending and only ${msg?.daysLeft} days left`;
                 } else {
-                    message = `Due in ${task.daysLeft} days`;
+                    message = `Due in ${msg?.daysLeft} days`;
                 }
             }
 
             const fullMessage: Message = {
-                ...task,
+                ...msg,
                 message,
             };
 
@@ -49,7 +45,7 @@ async function messageMaker(): Promise<Message[]> {
             console.log(`Message: ${fullMessage.message}`);
             console.log(`Days Left: ${fullMessage.daysLeft}`);
             console.log("Assignees:");
-            fullMessage.assignees.forEach((assignee) =>
+            fullMessage.assignees?.forEach((assignee) =>
                 console.log(`\t -> ${assignee}`),
             );
             console.log(
@@ -87,9 +83,11 @@ export async function taskMessageHandler(client: Client) {
     const msgList = await messageMaker();
 
     for (const message of msgList) {
-        const mentions = getAssigneeMentions(message.assignees);
-        const content = `## ${message.title}\n ${message.message}\n Days Left: ${message.daysLeft}\n Assignees: ${mentions}`;
-        //await channel.send(content);
+        if (message) {
+            const mentions = getAssigneeMentions(message.assignees!);
+            const content = `## ${message.title}\n ${message.message}\n Days Left: ${message.daysLeft}\n Assignees: ${mentions}`;
+            //await channel.send(content);
+        }
     }
 
     await writeLastSent(now);

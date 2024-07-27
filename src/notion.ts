@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { NOTION_DATABASE_ID, NOTION_SECRET } from "./config";
+import { Message } from "./utils/types";
 
 const notionSecret = NOTION_SECRET;
 const databaseId = NOTION_DATABASE_ID;
@@ -10,20 +11,14 @@ if (!notionSecret || !databaseId) {
     process.exit(1);
 }
 
-export interface Task {
-    title: string;
-    daysLeft: number | null;
-    assignees: string[];
-}
-
-let taskList: Task[] = [];
+let msgList: Message[] = [];
 
 const notion = new Client({ auth: notionSecret });
 
-export async function notionConnect(): Promise<Task[]> {
-    taskList = []; // Clear the task list
+export async function notionConnect(): Promise<Message[]> {
+    msgList = []; // Clear the task list
     await queryDatabase();
-    return taskList;
+    return msgList;
 }
 
 async function queryDatabase(): Promise<void> {
@@ -37,7 +32,7 @@ async function queryDatabase(): Promise<void> {
         for (const page of response.results) {
             const task = formatter(page as PageObjectResponse);
             if (task) {
-                taskList.push(task);
+                msgList.push(task);
             }
         }
     } catch (error) {
@@ -45,7 +40,7 @@ async function queryDatabase(): Promise<void> {
     }
 }
 
-function formatter(page: PageObjectResponse): Task | null {
+function formatter(page: PageObjectResponse): void | Message {
     try {
         const properties = page.properties;
         const title = getPropertyValue(properties.Task, "title");
@@ -55,12 +50,12 @@ function formatter(page: PageObjectResponse): Task | null {
 
         // Skip tasks marked as done
         if (status?.name === "Done") {
-            return null;
+            return;
         }
 
         // Skip if no due date present
         if (!dueDate) {
-            return null;
+            return;
         }
 
         const daysLeft = dueDate
@@ -70,6 +65,8 @@ function formatter(page: PageObjectResponse): Task | null {
               )
             : null;
 
+        if (!daysLeft) return;
+
         return {
             title: title || "Untitled",
             daysLeft,
@@ -77,7 +74,7 @@ function formatter(page: PageObjectResponse): Task | null {
         };
     } catch (error) {
         console.error("Error formatting Notion page:", error);
-        return null;
+        return;
     }
 }
 
@@ -98,6 +95,6 @@ function getPropertyValue(property: any, type: string): any {
     }
 }
 
-export function getTaskList(): Task[] {
-    return taskList;
+export function getMsgList(): Message[] {
+    return msgList;
 }

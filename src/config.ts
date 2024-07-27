@@ -1,15 +1,8 @@
 import dotenv from "dotenv";
 import { MongoClient as MongoDbClient, Collection } from "mongodb";
+import { EnvVars } from "./utils/types";
 
 dotenv.config();
-
-interface EnvVars {
-    DISCORD_TOKEN: string;
-    DISCORD_CHANNEL_ID_GENERAL: string;
-    NOTION_SECRET: string;
-    NOTION_DATABASE_ID: string;
-    MONGO_URI: string;
-}
 
 const requiredEnvVars: (keyof EnvVars)[] = [
     "DISCORD_TOKEN",
