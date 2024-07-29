@@ -1,13 +1,13 @@
 {
     "name": "botcore",
     "version": "1.0.0",
-    "description": "",
+    "description": "discord bot for pclub",
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon  src/index.ts",
         "build": "tsc",
-        "start": "node -r module-alias/register ./dist/index.js"
+        "start": "node -r module-alias/register ./dist/src/index.js"
     },
     "_moduleAliases": {
         "@": "dist/src"
