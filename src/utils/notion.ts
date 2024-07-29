@@ -1,7 +1,7 @@
 import { Client } from "@notionhq/client";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-import { NOTION_DATABASE_ID, NOTION_SECRET } from "./config";
-import { Message } from "./utils/types";
+import { NOTION_DATABASE_ID, NOTION_SECRET } from "../config";
+import { Message } from "./types";
 
 const notionSecret = NOTION_SECRET;
 const databaseId = NOTION_DATABASE_ID;

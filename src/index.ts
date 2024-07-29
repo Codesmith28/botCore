@@ -38,9 +38,6 @@ async function main() {
         await client.login(token);
         console.log("Bot is running...");
 
-        // Set up task message handler to run every 5 mins
-        setInterval(() => taskMessageHandler(client), 5 * 60 * 1000);
-
         // Start Express server
         app.listen(port, () => {
             console.log(`Server running on port ${port}`);

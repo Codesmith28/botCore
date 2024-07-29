@@ -1,6 +1,6 @@
 import { Client, TextChannel } from "discord.js";
 import { readLastSent, writeLastSent } from "./db.js";
-import { notionConnect, getMsgList } from "./notion";
+import { notionConnect, getMsgList } from "./utils/notion.js";
 import { DISCORD_CHANNEL_ID_GENERAL } from "./config.js";
 import { MemberMap, Message } from "./utils/types.js";
 
@@ -98,7 +98,6 @@ export async function taskMessageHandler(client: Client) {
 export function botHandler(client: Client) {
     client.once("ready", () => {
         console.log("Discord bot is ready!");
-        setInterval(() => taskMessageHandler(client), 5 * 1000);
-        taskMessageHandler(client);
+        setInterval(() => taskMessageHandler(client), 5 * 60 * 1000);
     });
 }
