@@ -2,13 +2,15 @@
     "name": "botcore",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/index.js",
-    "type": "module",
+    "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "dev": "nodemon  src/index.ts",
         "build": "tsc",
-        "start": "node ./dist/index.js"
+        "start": "node -r module-alias/register ./dist/index.js"
+    },
+    "_moduleAliases": {
+        "@": "dist/src"
     },
     "keywords": [],
     "author": "",
@@ -17,7 +19,9 @@
         "@types/express": "^4.17.21",
         "@types/node": "^20.14.9",
         "ts-node": "^10.9.2",
-        "typescript": "^5.5.2"
+        "typescript": "^5.5.2",
+        "tsconfig-paths": "^4.2.0",
+        "module-alias": "^2.2.3"
     },
     "dependencies": {
         "@discordjs/rest": "^2.3.0",
@@ -27,7 +31,6 @@
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "mongodb": "^6.8.0",
-        "nodemon": "^3.1.4",
-        "tsconfig-paths": "^4.2.0"
+        "nodemon": "^3.1.4"
     }
 }
