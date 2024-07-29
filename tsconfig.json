@@ -9,7 +9,7 @@
         "incremental": true,
         "allowSyntheticDefaultImports": true,
         "baseUrl": "./",
-        "outDir": "./dist",
+        "outDir": "./dist/src",
         "paths": {
             "@/*": ["src/*"]
         },
