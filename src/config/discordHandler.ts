@@ -1,8 +1,8 @@
 import { Client, TextChannel } from "discord.js";
-import { readLastSent, writeLastSent } from "./db.js";
-import { notionConnect, getMsgList } from "@/utils/notion.js";
-import { DISCORD_CHANNEL_ID_GENERAL } from "@/config/config.js";
-import { MemberMap, Message } from "@/utils/types.js";
+import { readLastSent, writeLastSent } from "@/config/db";
+import { notionConnect, getMsgList } from "@/utils/notion";
+import { DISCORD_CHANNEL_ID_GENERAL } from "@/config/config";
+import { MemberMap, Message } from "@/utils/types";
 
 const generalChannelId = DISCORD_CHANNEL_ID_GENERAL;
 const memberMap: { [key: string]: string } = MemberMap;
