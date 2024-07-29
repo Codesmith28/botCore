@@ -1,10 +1,10 @@
 import "tsconfig-paths/register";
 import { Client, GatewayIntentBits } from "discord.js";
-import express from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
-import { botHandler } from "./discordHandler";
-import { initMongo } from "./db";
-import { DISCORD_TOKEN, MONGO_URI } from "./config";
+import { botHandler } from "@/config/discordHandler";
+import { initMongo } from "@/config/db";
+import { DISCORD_TOKEN, MONGO_URI } from "@/config/config";
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ const client = new Client({
 const app = express();
 const port = process.env.PORT || 8080;
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
     console.log("Health check endpoint accessed");
     res.send("OK");
 });
