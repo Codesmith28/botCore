@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { MongoClient as MongoDbClient, Collection } from "mongodb";
-import { EnvVars } from "./utils/types";
+import { EnvVars } from "@/utils/types";
 
 dotenv.config();
 

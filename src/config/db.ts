@@ -1,6 +1,6 @@
 import { MongoClient as MC, Collection } from "mongodb";
-import { LastSentRecord } from "./utils/types.js";
-import { MONGO_URI } from "./config.js";
+import { LastSentRecord } from "@/utils/types";
+import { MONGO_URI } from "@/config/config";
 
 let mongoClient: MC;
 let mongoCollection: Collection;
