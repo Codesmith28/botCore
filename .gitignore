@@ -1,5 +1,5 @@
 .env
 *.txt
-client_secret.json
+cred.json
 node_modules
 dist
