@@ -41,6 +41,9 @@ async function messageMaker(): Promise<Message[]> {
             };
 
             // Log each message
+            console.log(
+                "------------------------------------------------------",
+            );
             console.log(`Title: ${fullMessage.title}`);
             console.log(`Message: ${fullMessage.message}`);
             console.log(`Days Left: ${fullMessage.daysLeft}`);
@@ -73,11 +76,10 @@ export async function taskMessageHandler(client: Client) {
     const lastSent = await readLastSent();
     const now = new Date();
 
-    // normal message sending:
-    //if (now.getTime() - lastSent.getTime() < 24 * 60 * 60 * 1000) {
-    //    console.log("Message already sent today, skipping...");
-    //    return;
-    //}
+    if (now.getTime() - lastSent.getTime() < 24 * 60 * 60 * 1000) {
+        console.log("Message already sent today, skipping...");
+        return;
+    }
 
     await notionConnect();
     const msgList = await messageMaker();
@@ -86,7 +88,7 @@ export async function taskMessageHandler(client: Client) {
         if (message) {
             const mentions = getAssigneeMentions(message.assignees!);
             const content = `## ${message.title}\n ${message.message}\n Days Left: ${message.daysLeft}\n Assignees: ${mentions}`;
-            //await channel.send(content);
+            await channel.send(content);
         }
     }
 
