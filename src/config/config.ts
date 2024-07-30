@@ -11,6 +11,7 @@ const requiredEnvVars: (keyof EnvVars)[] = [
     "NOTION_DATABASE_ID",
     "MONGO_URI",
     "ANALYTICS_PATH",
+    "PROPERTY_ID",
 ];
 
 function loadAndCheckEnvVars(): EnvVars {
@@ -20,7 +21,7 @@ function loadAndCheckEnvVars(): EnvVars {
         const value = process.env[key];
         if (!value) {
             throw new Error(
-                `${key} not found in environment variables or .env file`
+                `${key} not found in environment variables or .env file`,
             );
         }
         envVars[key] = value;
@@ -36,6 +37,7 @@ export const {
     NOTION_DATABASE_ID,
     MONGO_URI,
     ANALYTICS_PATH,
+    PROPERTY_ID,
 } = loadAndCheckEnvVars();
 
 export let MongoClient: typeof MongoDbClient;
