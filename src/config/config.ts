@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { MongoClient as MongoDbClient, Collection } from "mongodb";
-import { EnvVars } from "@/utils/types";
+import { EnvVars } from "@/config/types";
 
 dotenv.config();
 
@@ -20,7 +20,7 @@ function loadAndCheckEnvVars(): EnvVars {
         const value = process.env[key];
         if (!value) {
             throw new Error(
-                `${key} not found in environment variables or .env file`,
+                `${key} not found in environment variables or .env file`
             );
         }
         envVars[key] = value;

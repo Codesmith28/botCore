@@ -1,5 +1,5 @@
 import { MongoClient as MC, Collection } from "mongodb";
-import { LastSentRecord } from "@/utils/types";
+import { LastSentRecord } from "@/config/types";
 import { MONGO_URI } from "@/config/config";
 
 let mongoClient: MC;
@@ -39,7 +39,7 @@ export async function writeLastSent(t: Date): Promise<void> {
         await mongoCollection.updateOne(
             { id: "lastSent" },
             { $set: { timestamp: t } },
-            { upsert: true },
+            { upsert: true }
         );
     } catch (err) {
         console.error("Error writing last sent timestamp:", err);
