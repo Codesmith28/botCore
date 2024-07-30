@@ -12,10 +12,11 @@ const requiredEnvVars = [
     "ANALYTICS_PATH",
     "GOOGLE_EMAIL",
     "GOOGLE_PK",
+    "PCLUB_PROPERTY_ID",
 ] as const;
 
 function loadAndCheckEnvVars() {
-    const env: { [key: string]: string } = {};
+    const env: { [key: string]: any } = {};
 
     for (const key of requiredEnvVars) {
         const value = process.env[key];

@@ -1,3 +1,4 @@
+import { env } from "@/config/config";
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
 import { GoogleAuth } from "google-auth-library";
 
@@ -6,8 +7,8 @@ const analyticsDataClient = new BetaAnalyticsDataClient({
         projectId: "quickstart-1721808635827",
         scopes: "https://www.googleapis.com/auth/analytics",
         credentials: {
-            client_email: process.env.GOOGLE_EMAIL!,
-            private_key: process.env.GOOGLE_PK!,
+            client_email: env.GOOGLE_EMAIL,
+            private_key: env.GOOGLE_PK,
         },
     }),
 });
@@ -44,6 +45,8 @@ export async function getViewsAndUsers(propertyId: string) {
         viewsAndUsers["views"] = Number(row.metricValues![0].value);
         viewsAndUsers["users"] = Number(row.metricValues![1].value);
     });
+
+    console.log(viewsAndUsers);
 
     return viewsAndUsers;
 }

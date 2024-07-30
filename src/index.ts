@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import { botHandler } from "@/config/discordHandler";
 import { initMongo } from "@/config/db";
 import { env } from "@/config/config";
+import { getViewsAndUsers } from "./utils/analytics";
 
 dotenv.config();
 
@@ -32,6 +33,8 @@ async function main() {
     try {
         // Connect to MongoDB
         await initMongo();
+
+        await getViewsAndUsers(env.PCLUB_PROPERTY_ID);
 
         // Set up Discord bot
         botHandler(client);
