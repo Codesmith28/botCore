@@ -1,21 +1,19 @@
 import dotenv from "dotenv";
 import { MongoClient as MongoDbClient, Collection } from "mongodb";
-import { EnvVars } from "@/config/types";
 
 dotenv.config();
 
-const requiredEnvVars: (keyof EnvVars)[] = [
+const requiredEnvVars = [
     "DISCORD_TOKEN",
     "DISCORD_CHANNEL_ID_GENERAL",
     "NOTION_SECRET",
     "NOTION_DATABASE_ID",
     "MONGO_URI",
     "ANALYTICS_PATH",
-    "PCLUB_PROPERTY_ID",
-];
+] as const;
 
-function loadAndCheckEnvVars(): EnvVars {
-    const envVars: Partial<EnvVars> = {};
+function loadAndCheckEnvVars() {
+    const envVars: { [key: string]: string } = {};
 
     for (const key of requiredEnvVars) {
         const value = process.env[key];
@@ -27,8 +25,10 @@ function loadAndCheckEnvVars(): EnvVars {
         envVars[key] = value;
     }
 
-    return envVars as EnvVars;
+    return envVars;
 }
+
+const envVars = loadAndCheckEnvVars();
 
 export const {
     DISCORD_TOKEN,
@@ -37,8 +37,7 @@ export const {
     NOTION_DATABASE_ID,
     MONGO_URI,
     ANALYTICS_PATH,
-    PCLUB_PROPERTY_ID,
-} = loadAndCheckEnvVars();
+} = envVars;
 
 export let MongoClient: typeof MongoDbClient;
 export let MongoCollection: Collection;

@@ -1,35 +1,49 @@
-import { ANALYTICS_PATH, PCLUB_PROPERTY_ID } from "@/config/config";
 import { BetaAnalyticsDataClient } from "@google-analytics/data";
+import { GoogleAuth } from "google-auth-library";
 
-const credPath = ANALYTICS_PATH;
-const analyticsDataClient = new BetaAnalyticsDataClient();
-const pclubPropertyId = PCLUB_PROPERTY_ID;
+const analyticsDataClient = new BetaAnalyticsDataClient({
+    auth: new GoogleAuth({
+        projectId: "quickstart-1721808635827",
+        scopes: "https://www.googleapis.com/auth/analytics",
+        credentials: {
+            client_email: process.env.GOOGLE_EMAIL!,
+            private_key: process.env.GOOGLE_PK!,
+        },
+    }),
+});
 
-export async function runReport() {
+export async function getViewsAndUsers(propertyId: string) {
     const [response] = await analyticsDataClient.runReport({
-        property: `properties/${pclubPropertyId}`,
+        property: `properties/${propertyId}`,
         dateRanges: [
             {
                 startDate: "2020-03-31",
                 endDate: "today",
             },
         ],
-        dimensions: [
-            {
-                name: "city",
-            },
-        ],
+        dimensions: [],
         metrics: [
             {
-                name: "activeUsers",
+                name: "screenPageViews",
+            },
+            {
+                name: "totalUsers",
             },
         ],
     });
 
-    console.log("Report result:");
-    response?.rows?.forEach((row) => {
-        const dimensionValue = row.dimensionValues?.[0]?.value || "Unknown";
-        const metricValue = row.metricValues?.[0]?.value || "Unknown";
-        console.log(dimensionValue, metricValue);
+    const viewsAndUsers: {
+        views: number;
+        users: number;
+    } = {
+        views: 0,
+        users: 0,
+    };
+
+    response.rows?.forEach((row) => {
+        viewsAndUsers["views"] = Number(row.metricValues![0].value);
+        viewsAndUsers["users"] = Number(row.metricValues![1].value);
     });
+
+    return viewsAndUsers;
 }

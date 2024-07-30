@@ -21,16 +21,6 @@ export type LastSentRecord = {
     timestamp: Date;
 };
 
-export type EnvVars = {
-    DISCORD_TOKEN: string;
-    DISCORD_CHANNEL_ID_GENERAL: string;
-    NOTION_SECRET: string;
-    NOTION_DATABASE_ID: string;
-    MONGO_URI: string;
-    ANALYTICS_PATH: string;
-    PCLUB_PROPERTY_ID: string;
-};
-
 export const MemberMap: Record<string, string> = {
     "Sarthak Siddhpura": "1018820365021098074",
     "Zeel Rajeshbhai Rajodiya": "610860696023859210",
