@@ -28,7 +28,7 @@ export type EnvVars = {
     NOTION_DATABASE_ID: string;
     MONGO_URI: string;
     ANALYTICS_PATH: string;
-    PROPERTY_ID: string;
+    PCLUB_PROPERTY_ID: string;
 };
 
 export const MemberMap: Record<string, string> = {

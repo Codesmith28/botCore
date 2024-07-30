@@ -61,7 +61,7 @@ function formatter(page: PageObjectResponse): void | Message {
         const daysLeft = dueDate
             ? Math.ceil(
                   (new Date(dueDate).getTime() - Date.now()) /
-                      (1000 * 60 * 60 * 24)
+                      (1000 * 60 * 60 * 24),
               )
             : null;
 

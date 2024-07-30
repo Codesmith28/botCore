@@ -11,7 +11,7 @@ const requiredEnvVars: (keyof EnvVars)[] = [
     "NOTION_DATABASE_ID",
     "MONGO_URI",
     "ANALYTICS_PATH",
-    "PROPERTY_ID",
+    "PCLUB_PROPERTY_ID",
 ];
 
 function loadAndCheckEnvVars(): EnvVars {
@@ -37,7 +37,7 @@ export const {
     NOTION_DATABASE_ID,
     MONGO_URI,
     ANALYTICS_PATH,
-    PROPERTY_ID,
+    PCLUB_PROPERTY_ID,
 } = loadAndCheckEnvVars();
 
 export let MongoClient: typeof MongoDbClient;
