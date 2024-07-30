@@ -1,10 +1,10 @@
 import { Client } from "@notionhq/client";
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-import { NOTION_DATABASE_ID, NOTION_SECRET } from "@/config/config";
+import { env } from "@/config/config";
 import { Message } from "@/config/types";
 
-const notionSecret = NOTION_SECRET;
-const databaseId = NOTION_DATABASE_ID;
+const notionSecret = env.NOTION_SECRET;
+const databaseId = env.NOTION_DATABASE_ID;
 
 if (!notionSecret || !databaseId) {
     console.error("Missing Notion environment variables");
@@ -60,9 +60,9 @@ function formatter(page: PageObjectResponse): void | Message {
 
         const daysLeft = dueDate
             ? Math.ceil(
-                  (new Date(dueDate).getTime() - Date.now()) /
-                      (1000 * 60 * 60 * 24),
-              )
+                (new Date(dueDate).getTime() - Date.now()) /
+                (1000 * 60 * 60 * 24),
+            )
             : null;
 
         if (!daysLeft) return;

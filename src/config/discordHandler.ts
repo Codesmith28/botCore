@@ -1,16 +1,16 @@
 import { Client, TextChannel } from "discord.js";
 import { readLastSent, writeLastSent } from "@/config/db";
 import { notionConnect, getMsgList } from "@/utils/notion";
-import { DISCORD_CHANNEL_ID_GENERAL } from "@/config/config";
+import { env } from "@/config/config";
 import { MemberMap, Message } from "@/config/types";
 
-const generalChannelId = DISCORD_CHANNEL_ID_GENERAL;
+const generalChannelId = env.DISCORD_CHANNEL_ID_GENERAL;
 const memberMap: { [key: string]: string } = MemberMap;
 
 function getAssigneeMentions(assignees: string[]): string {
     return assignees
         .map((assignee) =>
-            memberMap[assignee] ? `<@${memberMap[assignee]}>` : ""
+            memberMap[assignee] ? `<@${memberMap[assignee]}>` : "",
         )
         .filter((mention) => mention !== "")
         .join(" ");
@@ -42,17 +42,17 @@ async function messageMaker(): Promise<Message[]> {
 
             // Log each message
             console.log(
-                "------------------------------------------------------"
+                "------------------------------------------------------",
             );
             console.log(`Title: ${fullMessage.title}`);
             console.log(`Message: ${fullMessage.message}`);
             console.log(`Days Left: ${fullMessage.daysLeft}`);
             console.log("Assignees:");
             fullMessage.assignees?.forEach((assignee) =>
-                console.log(`\t -> ${assignee}`)
+                console.log(`\t -> ${assignee}`),
             );
             console.log(
-                "------------------------------------------------------"
+                "------------------------------------------------------",
             );
 
             return fullMessage;

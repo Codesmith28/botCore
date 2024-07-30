@@ -10,10 +10,12 @@ const requiredEnvVars = [
     "NOTION_DATABASE_ID",
     "MONGO_URI",
     "ANALYTICS_PATH",
+    "GOOGLE_EMAIL",
+    "GOOGLE_PK",
 ] as const;
 
 function loadAndCheckEnvVars() {
-    const envVars: { [key: string]: string } = {};
+    const env: { [key: string]: string } = {};
 
     for (const key of requiredEnvVars) {
         const value = process.env[key];
@@ -22,22 +24,13 @@ function loadAndCheckEnvVars() {
                 `${key} not found in environment variables or .env file`,
             );
         }
-        envVars[key] = value;
+        env[key] = value;
     }
 
-    return envVars;
+    return env;
 }
 
-const envVars = loadAndCheckEnvVars();
-
-export const {
-    DISCORD_TOKEN,
-    DISCORD_CHANNEL_ID_GENERAL,
-    NOTION_SECRET,
-    NOTION_DATABASE_ID,
-    MONGO_URI,
-    ANALYTICS_PATH,
-} = envVars;
+export const env = loadAndCheckEnvVars();
 
 export let MongoClient: typeof MongoDbClient;
 export let MongoCollection: Collection;
