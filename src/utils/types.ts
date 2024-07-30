@@ -1,11 +1,3 @@
-export type Config = {
-    discordToken: string;
-    generalChannelId: string;
-    notionSecret: string;
-    notionDatabaseId: string;
-    mongoUri: string;
-};
-
 export type Task = {
     id: string;
     title: string;
@@ -35,6 +27,7 @@ export type EnvVars = {
     NOTION_SECRET: string;
     NOTION_DATABASE_ID: string;
     MONGO_URI: string;
+    ANALYTICS_PATH: string;
 };
 
 export const MemberMap: Record<string, string> = {

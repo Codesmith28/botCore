@@ -10,6 +10,7 @@ const requiredEnvVars: (keyof EnvVars)[] = [
     "NOTION_SECRET",
     "NOTION_DATABASE_ID",
     "MONGO_URI",
+    "ANALYTICS_PATH",
 ];
 
 function loadAndCheckEnvVars(): EnvVars {
@@ -34,6 +35,7 @@ export const {
     NOTION_SECRET,
     NOTION_DATABASE_ID,
     MONGO_URI,
+    ANALYTICS_PATH,
 } = loadAndCheckEnvVars();
 
 export let MongoClient: typeof MongoDbClient;
