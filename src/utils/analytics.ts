@@ -8,7 +8,7 @@ const analyticsDataClient = new BetaAnalyticsDataClient({
         scopes: "https://www.googleapis.com/auth/analytics",
         credentials: {
             client_email: env.GOOGLE_EMAIL,
-            private_key: env.GOOGLE_PK,
+            private_key: env.GOOGLE_PK.replace(/\\n/g, "\n"),
         },
     }),
 });
@@ -47,6 +47,7 @@ export async function getViewsAndUsers(propertyId: string) {
     });
 
     console.log(viewsAndUsers);
-
     return viewsAndUsers;
 }
+
+getViewsAndUsers(env.PCLUB_PROPERTY_ID).catch(console.error);
