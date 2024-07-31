@@ -1,5 +1,5 @@
 import { Client, TextChannel } from "discord.js";
-import { readLastSent, writeLastSent } from "@/config/db";
+import { readLastSent, writeLastSent } from "@/database/db";
 import { notionConnect } from "@/utils/notion";
 import { env } from "@/config/config";
 import { messageMaker, getAssigneeMentions } from "@/utils/messageMaker";
@@ -58,7 +58,7 @@ export async function analyticsMessageHandler(client: Client) {
     const { views, users } = await getViewsAndUsers(env.PCLUB_PROPERTY_ID);
     const content = `Views: ${views}\nUsers: ${users}`;
     await channel.send(content);
-    console.log("Analytics message sent!");
+    console.log("Analytics message sent! with content:", content);
 
     return;
 }
@@ -67,6 +67,6 @@ export function botHandler(client: Client) {
     client.once("ready", () => {
         console.log("Discord bot is ready!");
         setInterval(() => taskMessageHandler(client), 5 * 60 * 1000);
-        setInterval(() => analyticsMessageHandler(client), 6 * 1000);
+        setInterval(() => analyticsMessageHandler(client), 5 * 60 * 1000);
     });
 }

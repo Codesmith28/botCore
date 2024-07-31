@@ -3,7 +3,7 @@ import { Client, GatewayIntentBits } from "discord.js";
 import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { botHandler } from "@/config/discordHandler";
-import { initMongo } from "@/config/db";
+import { initMongo } from "@/database/db";
 import { env } from "@/config/config";
 import { getViewsAndUsers } from "./utils/analytics";
 
