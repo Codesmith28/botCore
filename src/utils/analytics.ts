@@ -49,5 +49,3 @@ export async function getViewsAndUsers(propertyId: string) {
     console.log(viewsAndUsers);
     return viewsAndUsers;
 }
-
-getViewsAndUsers(env.PCLUB_PROPERTY_ID).catch(console.error);
