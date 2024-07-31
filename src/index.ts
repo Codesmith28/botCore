@@ -34,8 +34,6 @@ async function main() {
         // Connect to MongoDB
         await initMongo();
 
-        await getViewsAndUsers(env.PCLUB_PROPERTY_ID);
-
         // Set up Discord bot
         botHandler(client);
         await client.login(token);

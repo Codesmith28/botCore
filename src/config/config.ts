@@ -6,6 +6,7 @@ dotenv.config();
 const requiredEnvVars = [
     "DISCORD_TOKEN",
     "DISCORD_CHANNEL_ID_GENERAL",
+    "DISCORD_CHANNEL_ID_ANALYTICS",
     "NOTION_SECRET",
     "NOTION_DATABASE_ID",
     "MONGO_URI",

@@ -3,8 +3,10 @@ import { readLastSent, writeLastSent } from "@/config/db";
 import { notionConnect } from "@/utils/notion";
 import { env } from "@/config/config";
 import { messageMaker, getAssigneeMentions } from "@/utils/messageMaker";
+import { getViewsAndUsers } from "@/utils/analytics";
 
 const generalChannelId = env.DISCORD_CHANNEL_ID_GENERAL;
+const analyticsChannelId = env.DISCORD_CHANNEL_ID_ANALYTICS;
 
 export async function taskMessageHandler(client: Client) {
     if (!generalChannelId) {
@@ -40,9 +42,31 @@ export async function taskMessageHandler(client: Client) {
     await writeLastSent(now);
 }
 
+export async function analyticsMessageHandler(client: Client) {
+    if (!analyticsChannelId) {
+        console.error("Missing ANALYTICS_CHANNEL_ID");
+        return;
+    }
+
+    const channel = await client.channels.fetch(analyticsChannelId);
+
+    if (!(channel instanceof TextChannel)) {
+        console.error("Invalid channel type");
+        return;
+    }
+
+    const { views, users } = await getViewsAndUsers(env.PCLUB_PROPERTY_ID);
+    const content = `Views: ${views}\nUsers: ${users}`;
+    await channel.send(content);
+    console.log("Analytics message sent!");
+
+    return;
+}
+
 export function botHandler(client: Client) {
     client.once("ready", () => {
         console.log("Discord bot is ready!");
         setInterval(() => taskMessageHandler(client), 5 * 60 * 1000);
+        setInterval(() => analyticsMessageHandler(client), 6 * 1000);
     });
 }
