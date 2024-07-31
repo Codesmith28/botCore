@@ -17,8 +17,15 @@ export type Message = {
 } | null;
 
 export type LastSentRecord = {
-    _id: string;
+    _id?: string;
     timestamp: Date;
+};
+
+export type AnalyticsRecord = {
+    _id?: string;
+    propertyId: string;
+    views: number;
+    users: number;
 };
 
 export const MemberMap: Record<string, string> = {
