@@ -1,5 +1,5 @@
 import { Client, TextChannel } from "discord.js";
-import { readLastSent, writeLastSent } from "@/database/db";
+import { readLastSent, writeLastSent } from "@/database/dbFunctions";
 import { notionConnect } from "@/utils/notion";
 import { env } from "@/config/config";
 import { messageMaker, getAssigneeMentions } from "@/utils/messageMaker";
