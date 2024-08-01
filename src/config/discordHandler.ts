@@ -1,5 +1,10 @@
 import { Client, TextChannel } from "discord.js";
-import { readLastSent, writeLastSent } from "@/database/dbFunctions";
+import {
+    readAnalytics,
+    readLastSent,
+    writeAnalytics,
+    writeLastSent,
+} from "@/database/dbFunctions";
 import { notionConnect } from "@/utils/notion";
 import { env } from "@/config/config";
 import { messageMaker, getAssigneeMentions } from "@/utils/messageMaker";
@@ -49,24 +54,28 @@ export async function analyticsMessageHandler(client: Client) {
     }
 
     const channel = await client.channels.fetch(analyticsChannelId);
-
     if (!(channel instanceof TextChannel)) {
         console.error("Invalid channel type");
         return;
     }
 
+    const currentAnalytics = await readAnalytics(env.PCLUB_PROPERTY_ID);
+    console.log("Current analytics:", currentAnalytics);
+
     const { views, users } = await getViewsAndUsers(env.PCLUB_PROPERTY_ID);
+
+    await writeAnalytics(env.PCLUB_PROPERTY_ID, views, users);
+
     const content = `Views: ${views}\nUsers: ${users}`;
     await channel.send(content);
-    console.log("Analytics message sent! with content:", content);
 
-    return;
+    console.log("Analytics message sent! with content:", content);
 }
 
 export function botHandler(client: Client) {
     client.once("ready", () => {
         console.log("Discord bot is ready!");
         setInterval(() => taskMessageHandler(client), 5 * 60 * 1000);
-        setInterval(() => analyticsMessageHandler(client), 5 * 60 * 1000);
+        setInterval(() => analyticsMessageHandler(client), 5 * 1000);
     });
 }

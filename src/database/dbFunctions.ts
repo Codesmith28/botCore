@@ -1,14 +1,23 @@
 import { Collection, ObjectId } from "mongodb";
+import { getCollection } from "./db";
 import { AnalyticsRecord, LastSentRecord } from "@/config/types";
 
-let lastSentCollection: Collection<LastSentRecord>;
+let lastSentCollection: Collection | null = null;
+let analyzeCollection: Collection | null = null;
+
+function initializeCollections() {
+    if (!lastSentCollection) {
+        lastSentCollection = getCollection("lastSent");
+    }
+    if (!analyzeCollection) {
+        analyzeCollection = getCollection("analytics");
+    }
+}
 
 export async function readLastSent(): Promise<Date> {
     try {
-        if (!lastSentCollection) {
-            throw new Error("MongoDB collection not initialized");
-        }
-        const record = await lastSentCollection.findOne<LastSentRecord>({
+        initializeCollections();
+        const record = await lastSentCollection!.findOne<LastSentRecord>({
             id: "lastSent",
         });
         return record ? record.timestamp : new Date(0);
@@ -20,10 +29,8 @@ export async function readLastSent(): Promise<Date> {
 
 export async function writeLastSent(t: Date): Promise<void> {
     try {
-        if (!lastSentCollection) {
-            throw new Error("MongoDB collection not initialized");
-        }
-        await lastSentCollection.updateOne(
+        initializeCollections();
+        await lastSentCollection!.updateOne(
             { id: "lastSent" },
             { $set: { timestamp: t } },
             { upsert: true },
@@ -33,43 +40,48 @@ export async function writeLastSent(t: Date): Promise<void> {
     }
 }
 
-let analyzeCollection: Collection<AnalyticsRecord>;
-
-export async function getViewsAndUsers(
+export async function readAnalytics(
     propertyId: string,
-    newViews: number,
-    newUsers: number,
 ): Promise<AnalyticsRecord> {
     try {
-        if (!analyzeCollection) {
-            throw new Error("MongoDB collection not initialized");
-        }
-
-        const updatedRecord: Partial<AnalyticsRecord> = {
-            views: newViews,
-            users: newUsers,
-        };
-
-        const result = await analyzeCollection.findOneAndUpdate(
-            { propertyId },
-            { $set: updatedRecord },
-            { upsert: true, returnDocument: "after" },
+        initializeCollections();
+        const record = await analyzeCollection!.findOne<AnalyticsRecord>({
+            propertyId,
+        });
+        return (
+            record || {
+                _id: new ObjectId().toString(),
+                propertyId,
+                views: 0,
+                users: 0,
+            }
         );
-
-        if (result?.views && result?.users) {
-            return result;
-        } else {
-            throw new Error("Failed to update or insert the record");
-        }
     } catch (err) {
-        console.error("Error updating analytics record:", err);
-
-        // In case of error, return a record with the provided data and a generated ID
+        console.error("Error reading analytics record:", err);
         return {
             _id: new ObjectId().toString(),
             propertyId,
-            views: newViews,
-            users: newUsers,
+            views: 0,
+            users: 0,
         };
+    }
+}
+
+export async function writeAnalytics(
+    propertyId: string,
+    views: number,
+    users: number,
+): Promise<void> {
+    try {
+        initializeCollections();
+        await analyzeCollection!.updateOne(
+            { propertyId },
+            {
+                $set: { views, users },
+            },
+            { upsert: true },
+        );
+    } catch (err) {
+        console.error("Error writing analytics record:", err);
     }
 }
