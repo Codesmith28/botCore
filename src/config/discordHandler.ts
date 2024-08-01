@@ -60,16 +60,27 @@ export async function analyticsMessageHandler(client: Client) {
     }
 
     const currentAnalytics = await readAnalytics(env.PCLUB_PROPERTY_ID);
-    console.log("Current analytics:", currentAnalytics);
-
     const { views, users } = await getViewsAndUsers(env.PCLUB_PROPERTY_ID);
-
     await writeAnalytics(env.PCLUB_PROPERTY_ID, views, users);
 
-    const content = `Views: ${views}\nUsers: ${users}`;
-    await channel.send(content);
+    let viewsThreshold =
+        Math.floor(currentAnalytics.views / 500) < Math.floor(views / 500);
+    let usersThreshold =
+        Math.floor(currentAnalytics.users / 50) < Math.floor(users / 50);
 
-    console.log("Analytics message sent! with content:", content);
+    if (viewsThreshold || usersThreshold) {
+        const content = `
+        📊 **Analytics Update** 📊
+
+        **🔹 Views:** **${views}** ${views ? "🚀" : ""} !!!
+        **🔹 Users:** **${users}** ${usersThreshold ? "🎉" : ""} !!!
+
+        `;
+        await channel.send(content);
+        console.log("Analytics message sent! Content:", content);
+    } else {
+        console.log("Thresholds not crossed. No message sent.");
+    }
 }
 
 export function botHandler(client: Client) {
