@@ -87,6 +87,6 @@ export function botHandler(client: Client) {
     client.once("ready", () => {
         console.log("Discord bot is ready!");
         setInterval(() => taskMessageHandler(client), 5 * 60 * 1000);
-        setInterval(() => analyticsMessageHandler(client), 5 * 1000);
+        setInterval(() => analyticsMessageHandler(client), 5 * 60 * 1000);
     });
 }
