@@ -2,7 +2,7 @@
 FROM node:19-alpine
 
 # Create and change to the app directory
-WORKDIR /app
+WORKDIR /src
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
