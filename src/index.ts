@@ -5,7 +5,6 @@ import dotenv from "dotenv";
 import { botHandler } from "@/config/discordHandler";
 import { initMongo } from "@/database/db";
 import { env } from "@/config/config";
-import { getViewsAndUsers } from "./utils/analytics";
 
 dotenv.config();
 
