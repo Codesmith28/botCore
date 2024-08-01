@@ -1,6 +1,6 @@
 import "tsconfig-paths/register";
 import { Client, GatewayIntentBits } from "discord.js";
-import express, { Request, Response } from "express";
+import express, { Response } from "express";
 import dotenv from "dotenv";
 import { botHandler } from "@/config/discordHandler";
 import { initMongo } from "@/database/db";
@@ -10,6 +10,7 @@ dotenv.config();
 
 const token = env.DISCORD_TOKEN;
 const mongoUri = env.MONGO_URI;
+const port = process.env.PORT || 8080;
 
 if (!token || !mongoUri) {
     console.error("Missing environment variables");
@@ -21,9 +22,8 @@ const client = new Client({
 });
 
 const app = express();
-const port = process.env.PORT || 8080;
 
-app.get("/", (req: Request, res: Response) => {
+app.get("/", (res: Response) => {
     console.log("Health check endpoint accessed");
     res.send("OK");
 });
