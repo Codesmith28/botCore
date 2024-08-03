@@ -1,6 +1,6 @@
 import "tsconfig-paths/register";
 import { Client, GatewayIntentBits } from "discord.js";
-import express, { Response } from "express";
+import express, { Request, Response } from "express";
 import dotenv from "dotenv";
 import { botHandler } from "@/config/discordHandler";
 import { initMongo } from "@/database/db";
@@ -23,7 +23,7 @@ const client = new Client({
 
 const app = express();
 
-app.get("/", (res: Response) => {
+app.get("/", (req: Request, res: Response) => {
     console.log("Health check endpoint accessed");
     res.send("OK");
 });
