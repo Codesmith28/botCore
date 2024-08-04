@@ -1,3 +1,12 @@
+import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+
+export type Command = {
+    data:
+    | SlashCommandBuilder
+    | Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
+    execute: (interaction: CommandInteraction) => Promise<void>;
+};
+
 export type Task = {
     id: string;
     title: string;

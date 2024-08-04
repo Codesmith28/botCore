@@ -14,6 +14,9 @@ importers:
       '@google-analytics/data':
         specifier: ^4.7.0
         version: 4.7.0
+      '@google/generative-ai':
+        specifier: ^0.16.0
+        version: 0.16.0
       '@notionhq/client':
         specifier: ^2.2.15
         version: 2.2.15
@@ -95,6 +98,10 @@ packages:
   '@google-analytics/data@4.7.0':
     resolution: {integrity: sha512-ObTEfzGlih2+7UV282tjSp7UbXhG5viKpUmUvRRDtm5Be6xqBqYVR3rTjekmMHrXKxIDDjwI0WVOmvF+KlLE1g==}
     engines: {node: '>=14.0.0'}
+
+  '@google/generative-ai@0.16.0':
+    resolution: {integrity: sha512-doB5ZNxS6m+jUZqaLCeYXfBZCdq6Ho0ibkq5/17xe1qAUZpCLWlvCDGtqFPqqO+yezNmvGatS0KhV22yiOT3DA==}
+    engines: {node: '>=18.0.0'}
 
   '@grpc/grpc-js@1.11.1':
     resolution: {integrity: sha512-gyt/WayZrVPH2w/UTLansS7F9Nwld472JxxaETamrM8HNlsa+jSLNyKAZmhxI2Me4c3mQHFiS1wWHDY1g1Kthw==}
@@ -1086,6 +1093,8 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
+
+  '@google/generative-ai@0.16.0': {}
 
   '@grpc/grpc-js@1.11.1':
     dependencies:
