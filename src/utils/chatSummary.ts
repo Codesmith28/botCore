@@ -69,7 +69,7 @@ export async function summarizeByDay(
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const messages = await channel.messages.fetch({ limit: 100 });
+        const messages = await channel.messages.fetch({ limit: 150 });
         const todayMessages = messages.filter((m) => m.createdAt >= today);
 
         const summary = await summarizeMessages(
