@@ -4,6 +4,7 @@ import { MongoClient as MongoDbClient, Collection } from "mongodb";
 dotenv.config();
 
 const requiredEnvVars = [
+    "GUILD_ID",
     "DISCORD_TOKEN",
     "DISCORD_CHANNEL_ID_GENERAL",
     "DISCORD_CHANNEL_ID_ANALYTICS",
