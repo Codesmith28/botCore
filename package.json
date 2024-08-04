@@ -26,6 +26,7 @@
     "dependencies": {
         "@discordjs/rest": "^2.3.0",
         "@google-analytics/data": "^4.7.0",
+        "@google/generative-ai": "^0.16.0",
         "@notionhq/client": "^2.2.15",
         "discord-api-types": "^0.37.93",
         "discord.js": "^14.15.3",

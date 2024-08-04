@@ -14,6 +14,7 @@ const requiredEnvVars = [
     "GOOGLE_EMAIL",
     "GOOGLE_PK",
     "PCLUB_PROPERTY_ID",
+    "GEMINI_API_KEY",
 ] as const;
 
 function loadAndCheckEnvVars() {
@@ -23,7 +24,7 @@ function loadAndCheckEnvVars() {
         const value = process.env[key];
         if (!value) {
             throw new Error(
-                `${key} not found in environment variables or .env file`,
+                `${key} not found in environment variables or .env file`
             );
         }
         env[key] = value;
