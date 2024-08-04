@@ -1,8 +1,19 @@
 import { TextChannel, ThreadChannel, Message } from "discord.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { env } from "@/config/config";
+import path from "path";
+import fs from "fs";
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY!);
+
+const logFilePath = path.resolve(__dirname, "app.log");
+function logToFile(message: string) {
+    fs.appendFile(logFilePath, message + "\n", (err) => {
+        if (err) {
+            console.error("Error writing to log file:", err);
+        }
+    });
+}
 
 async function summarizeMessages(messages: Message[]): Promise<string> {
     try {
@@ -26,12 +37,20 @@ async function summarizeMessages(messages: Message[]): Promise<string> {
         }
 
         //debugging in app.log file:
-        // console.log(
-        //     "Messages used:",
-        //     messages.map((m) => m.content),
-        // );
-        // console.log("Prompt used:", prompt);
-        // console.log("Summary generated:", result.response.text());
+
+        //logToFile("Messages used:");
+        //messages.forEach((m) => logToFile(m.content));
+        //logToFile("Prompt used:");
+        //logToFile(prompt);
+        //logToFile("Summary generated:");
+        //logToFile(result.response.text());
+
+        console.log(
+            "Messages used:",
+            messages.map((m) => m.content),
+        );
+        console.log("Prompt used:", prompt);
+        console.log("Summary generated:", result.response.text());
 
         return result.response.text();
     } catch (error) {

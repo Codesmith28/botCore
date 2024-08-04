@@ -11,8 +11,8 @@ export const summarizeCommand = {
                 .setDescription("Type of summary")
                 .setRequired(true)
                 .addChoices(
-                    { name: "By Day", value: "day" },
-                    { name: "Entire Thread", value: "entire_thread" },
+                    { name: "Day", value: "day" },
+                    { name: "Thread", value: "entire_thread" },
                 ),
         ),
 

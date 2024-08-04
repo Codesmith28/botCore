@@ -28,7 +28,7 @@ export async function summaryMessageHandler(interaction: CommandInteraction) {
                 return;
         }
 
-        await interaction.editReply(`Here's the summary:\n\n${summary}`);
+        await interaction.editReply(`${summary}`);
     } catch (error) {
         console.error("Error in chat summary command:", error);
         await interaction.editReply(
