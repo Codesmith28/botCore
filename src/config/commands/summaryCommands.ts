@@ -4,11 +4,7 @@ import {
     TextChannel,
     ThreadChannel,
 } from "discord.js";
-import {
-    summarizeByDay,
-    summarizeLastThread,
-    summarizeEntireThread,
-} from "@/utils/chatSummary";
+import { summarizeByDay, summarizeEntireThread } from "@/utils/chatSummary";
 
 export const name = "summarize";
 export const description = "Summarize chat messages";
@@ -20,7 +16,6 @@ export const options = [
         required: true,
         choices: [
             { name: "By Day", value: "day" },
-            { name: "Last Thread", value: "last_thread" },
             { name: "Entire Thread", value: "entire_thread" },
         ],
     },
@@ -39,19 +34,10 @@ export async function execute(interaction: CommandInteraction) {
             case "day":
                 summary = await summarizeByDay(channel);
                 break;
-            case "last_thread":
-                if (channel.isThread()) {
-                    await interaction.editReply(
-                        'This option is not available in a thread. Use "Entire Thread" instead.'
-                    );
-                    return;
-                }
-                summary = await summarizeLastThread(channel as TextChannel);
-                break;
             case "entire_thread":
                 if (!channel.isThread()) {
                     await interaction.editReply(
-                        "This option is only available in a thread."
+                        "This option is only available in a thread.",
                     );
                     return;
                 }
@@ -66,7 +52,7 @@ export async function execute(interaction: CommandInteraction) {
     } catch (error) {
         console.error("Error in chat summary command:", error);
         await interaction.editReply(
-            "An error occurred while generating the summary. Please try again later."
+            "An error occurred while generating the summary. Please try again later.",
         );
     }
 }

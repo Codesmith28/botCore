@@ -143,7 +143,6 @@ export function botHandler(client: Client) {
                         required: true,
                         choices: [
                             { name: "By Day", value: "day" },
-                            { name: "Last Thread", value: "last_thread" },
                             { name: "Entire Thread", value: "entire_thread" },
                         ],
                     },
