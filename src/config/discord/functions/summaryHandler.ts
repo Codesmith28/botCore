@@ -2,14 +2,15 @@ import { summarizeByDay, summarizeEntireThread } from "@/utils/chatSummary";
 import { CommandInteraction, TextChannel } from "discord.js";
 
 export async function summaryMessageHandler(interaction: CommandInteraction) {
-    await interaction.deferReply();
-
-    const summaryType = interaction.options.get("type")?.value as string;
-    const channel = interaction.channel as TextChannel;
-
+    let deferred = false;
     try {
-        let summary: string;
+        await interaction.deferReply();
+        deferred = true;
 
+        const summaryType = interaction.options.get("type")?.value as string;
+        const channel = interaction.channel as TextChannel;
+
+        let summary: string;
         switch (summaryType) {
             case "day":
                 summary = await summarizeByDay(channel);
@@ -31,8 +32,19 @@ export async function summaryMessageHandler(interaction: CommandInteraction) {
         await interaction.editReply(`${summary}`);
     } catch (error) {
         console.error("Error in chat summary command:", error);
-        await interaction.editReply(
-            "An error occurred while generating the summary. Please try again later.",
-        );
+        if (deferred) {
+            await interaction.editReply(
+                "An error occurred while generating the summary. Please try again later.",
+            );
+        } else {
+            // If deferReply failed, try to send a new reply
+            try {
+                await interaction.reply(
+                    "An error occurred while generating the summary. Please try again later.",
+                );
+            } catch (replyError) {
+                console.error("Failed to send error message:", replyError);
+            }
+        }
     }
 }
