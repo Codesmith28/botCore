@@ -2,7 +2,7 @@ import { Client, REST, Routes } from "discord.js";
 import { env } from "@/config/config";
 import { analyticsMessageHandler } from "@/config/discord/functions/analyticsHandler";
 import { taskMessageHandler } from "@/config/discord/functions/taskHandler";
-import { summarizeCommand } from "./discord/commands/summarize";
+import { summarizeCommand } from "@/config/discord/commands/summarize";
 
 export function botHandler(client: Client) {
     client.once("ready", async () => {

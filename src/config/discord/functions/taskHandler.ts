@@ -1,8 +1,8 @@
+import { env } from "@/config/config";
 import { readLastSent, writeLastSent } from "@/database/dbFunctions";
 import { messageMaker, getAssigneeMentions } from "@/utils/messageMaker";
 import { notionConnect } from "@/utils/notion";
 import { Client, TextChannel } from "discord.js";
-import { env } from "process";
 
 const generalChannelId = env.DISCORD_CHANNEL_ID_GENERAL;
 

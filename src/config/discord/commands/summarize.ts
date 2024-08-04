@@ -1,5 +1,5 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
-import { summaryMessageHandler } from "../functions/summaryHandler";
+import { summaryMessageHandler } from "@/config/discord/functions/summaryHandler";
 
 export const summarizeCommand = {
     data: new SlashCommandBuilder()
