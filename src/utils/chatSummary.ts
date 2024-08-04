@@ -6,7 +6,7 @@ import fs from "fs";
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY!);
 
-const logFilePath = path.resolve(__dirname, "app.log");
+const logFilePath = path.resolve(__dirname, "../logs/app.log");
 function logToFile(message: string) {
     fs.appendFile(logFilePath, message + "\n", (err) => {
         if (err) {
@@ -36,13 +36,12 @@ async function summarizeMessages(messages: Message[]): Promise<string> {
             throw new Error("Failed to generate summary");
         }
 
-        //debugging in app.log file:
-
-        //logToFile("Messages used:");
+        // ADD LOGS TO A LOG FILE
+        //logToFile("\n Messages used: \n");
         //messages.forEach((m) => logToFile(m.content));
-        //logToFile("Prompt used:");
+        //logToFile("\n Prompt used: \n");
         //logToFile(prompt);
-        //logToFile("Summary generated:");
+        //logToFile("\n Summary generated: \n");
         //logToFile(result.response.text());
 
         console.log(
