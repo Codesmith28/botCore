@@ -30,13 +30,10 @@ async function summarizeMessages(messages: Message[]): Promise<string> {
             .join("\n");
 
         const prompt = `
-You are an AI assistant tasked with summarizing chat conversations. The following messages are from Ahmedabad University - Programming Club's official discord server. Please provide a concise summary of the main points discussed, focusing on key decisions, action items, and important questions. If there are any messages with embed content or attachments, mention them briefly. The summary should be in an informal tone.
 
-Messages:
 ${messageContents}
 
-Summary:
-`;
+Summarize the above message. keep it concise and make sure you do not miss any important detail `;
 
         const result = await model.generateContent(prompt);
         if (!result || !result.response) {
