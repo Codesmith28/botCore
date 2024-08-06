@@ -29,17 +29,17 @@ async function summarizeMessages(messages: Message[]): Promise<string> {
             .filter((content) => content !== null)
             .join("\n");
 
-        const prompt = ` ${messageContents} \n Summarize the above message. keep it concise and make sure you do not miss any important detail `;
+        const prompt = `${messageContents} \n Cover all the chat, summarize all the messages, don't skip any, use bullet points.`;
 
         const result = await model.generateContent(prompt);
         if (!result || !result.response) {
             throw new Error("Failed to generate summary");
         }
 
-        logToFile("\n Messages: \n");
-        logToFile(messageContents);
-        logToFile("\n Raw: \n");
-        logToFile(messages.map((m) => m).join("\n"));
+        //logToFile("\n Messages: \n");
+        //logToFile(messageContents);
+        //logToFile("\n Raw: \n");
+        //logToFile(messages.map((m) => m).join("\n"));
 
         return result.response.text();
     } catch (error) {
