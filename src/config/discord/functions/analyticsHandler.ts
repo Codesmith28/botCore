@@ -30,9 +30,8 @@ export async function analyticsMessageHandler(client: Client) {
         const content = `
         📊 **Analytics Update** 📊
 
-        **🔹 Views:** **${views}** ${views ? "🚀" : ""} !!!
-        **🔹 Users:** **${users}** ${usersThreshold ? "🎉" : ""} !!!
-
+    **🔹 Views:** **${views}** ${views ? "🚀" : ""} !!!
+    **🔹 Users:** **${users}** ${usersThreshold ? "🎉" : ""} !!!
         `;
         await channel.send(content);
         console.log("Analytics message sent! Content:", content);
