@@ -14,4 +14,8 @@ export const counterCommand = {
                     { name: "Month", value: "month" },
                 ),
         ),
+
+    execute: async (interaction: CommandInteraction) => {
+        //await
+    },
 };

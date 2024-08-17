@@ -4,7 +4,7 @@ import { analyticsMessageHandler } from "@/config/discord/functions/analyticsHan
 import { taskMessageHandler } from "@/config/discord/functions/taskHandler";
 
 import { summarizeCommand } from "@/config/discord/commands/summarize";
-import { cpCounterCommand } from "@/config/discord/commands/cpCounterCommand";
+import { counterCommand } from "./discord/commands/counterCommand";
 
 export function botHandler(client: Client) {
     client.once("ready", async () => {
@@ -14,7 +14,7 @@ export function botHandler(client: Client) {
 
         const commands = [
             summarizeCommand,
-            cpCounterCommand,
+            counterCommand,
             // Add other commands here
         ].map((command) => command.data.toJSON());
 
@@ -23,7 +23,7 @@ export function botHandler(client: Client) {
 
             await rest.put(
                 Routes.applicationGuildCommands(client.user!.id, env.GUILD_ID),
-                { body: commands }
+                { body: commands },
             );
 
             console.log("Successfully reloaded application (/) commands.");
@@ -33,13 +33,12 @@ export function botHandler(client: Client) {
 
         client.on("interactionCreate", async (interaction) => {
             if (!interaction.isCommand()) return;
-
             switch (interaction.commandName) {
                 case "summarize":
                     await summarizeCommand.execute(interaction);
                     break;
                 case "count-active":
-                    await cpCounterCommand.execute(interaction);
+                    await counterCommand.execute(interaction);
                     break;
                 // case "otherCommand":
                 //     await otherCommand.execute(interaction);
