@@ -1,8 +1,9 @@
 import { CommandInteraction, SlashCommandBuilder } from "discord.js";
+import { cpCounterHandler } from "../functions/cpCounterHandler";
 
 export const counterCommand = {
     data: new SlashCommandBuilder()
-        .setName("countActive")
+        .setName("count-active")
         .setDescription("Count active cp doers")
         .addStringOption((option) =>
             option
@@ -16,6 +17,6 @@ export const counterCommand = {
         ),
 
     execute: async (interaction: CommandInteraction) => {
-        //await
+        await cpCounterHandler(interaction);
     },
 };
