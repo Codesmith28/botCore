@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "NodeNext",
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "incremental": true,
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "./",
+        "outDir": "./dist/src",
+        "paths": {
+            "@/*": ["src/*"]
+        },
+        "skipLibCheck": true
+    },
+    "exclude": ["node_modules", "typings"],
+    "include": ["./src/**/*"]
+}

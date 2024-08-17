@@ -1,0 +1,39 @@
+{
+    "name": "botcore",
+    "version": "1.0.0",
+    "description": "discord bot for pclub",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "nodemon  src/index.ts",
+        "build": "tsc",
+        "start": "node -r module-alias/register ./dist/src/index.js"
+    },
+    "_moduleAliases": {
+        "@": "dist/src"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.14.9",
+        "module-alias": "^2.2.3",
+        "ts-node": "^10.9.2",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.5.2"
+    },
+    "dependencies": {
+        "@discordjs/rest": "^2.3.0",
+        "@google-analytics/data": "^4.7.0",
+        "@google/generative-ai": "^0.16.0",
+        "@notionhq/client": "^2.2.15",
+        "discord-api-types": "^0.37.93",
+        "discord.js": "^14.15.3",
+        "dotenv": "^16.4.5",
+        "express": "^4.19.2",
+        "google-auth-library": "^9.12.0",
+        "mongodb": "^6.8.0",
+        "nodemon": "^3.1.4"
+    }
+}

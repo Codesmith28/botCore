@@ -1,4 +1,6 @@
 .env
 *.txt
-credentials.json
+cred.json
 node_modules
+dist
+logs
