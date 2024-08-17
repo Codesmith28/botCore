@@ -5,7 +5,7 @@ export async function summaryMessageHandler(interaction: CommandInteraction) {
     let deferred = false;
     try {
         await interaction.deferReply();
-        deferred = true;
+        deferred = true;   
 
         const summaryType = interaction.options.get("type")?.value as string;
         const channel = interaction.channel as TextChannel;
