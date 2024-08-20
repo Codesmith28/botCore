@@ -1,4 +1,4 @@
-import { Client, REST, Routes } from "discord.js";
+import { Client, PermissionsBitField, REST, Routes } from "discord.js";
 import { env } from "@/config/config";
 import { analyticsMessageHandler } from "@/config/discord/functions/analyticsHandler";
 import { taskMessageHandler } from "@/config/discord/functions/taskHandler";
@@ -33,11 +33,33 @@ export function botHandler(client: Client) {
 
         client.on("interactionCreate", async (interaction) => {
             if (!interaction.isCommand()) return;
+
+            // Check if interaction.member is null or undefined
+            if (!interaction.member || !interaction.guild) {
+                await interaction.reply({
+                    content: "This command can only be used in a server.",
+                    ephemeral: true,
+                });
+                return;
+            }
+
+            // Check if the user has the Administrator permission
+            const memberPermissions = interaction.member
+                .permissions as Readonly<PermissionsBitField>;
+
             switch (interaction.commandName) {
                 case "summarize":
                     await summarizeCommand.execute(interaction);
                     break;
                 case "count-active":
+                    if (!memberPermissions.has("Administrator")) {
+                        await interaction.reply({
+                            content:
+                                "You do not have permission to use this command.",
+                            ephemeral: true,
+                        });
+                        return;
+                    }
                     await counterCommand.execute(interaction);
                     break;
                 // case "otherCommand":
