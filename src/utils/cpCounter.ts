@@ -37,17 +37,13 @@ export async function countThumbReactions(
                 (reaction) => reaction.emoji.name === "👍",
             );
 
-            if (thumbReaction) {
-                // Fetch all users who reacted with thumbs up
-                const users = await thumbReaction.users.fetch();
-                users.forEach((user) => {
-                    if (!user.bot) {
-                        const userId = user.id;
-                        const count = userReactionCount.get(userId) || 0;
-                        userReactionCount.set(userId, count + 1);
-                    }
-                });
-            }
+            const validMessages = await thumbReaction?.users.fetch();
+            validMessages?.forEach((user) => {
+                userReactionCount.set(
+                    user.id,
+                    (userReactionCount.get(user.id) || 0) + 1,
+                );
+            });
         }
 
         // Generate the response string

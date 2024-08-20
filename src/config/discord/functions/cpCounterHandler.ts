@@ -1,6 +1,6 @@
 import { env } from "@/config/config";
 import { countThumbReactions } from "@/utils/cpCounter";
-import { Client, CommandInteraction, TextChannel } from "discord.js";
+import { CommandInteraction, TextChannel } from "discord.js";
 
 export async function cpCounterHandler(interaction: CommandInteraction) {
     let defered = false;
