@@ -1,49 +1,64 @@
-import { TextChannel } from "discord.js";
+import { TextChannel, Collection, Message } from "discord.js";
 
-export async function countForWeek(channel: TextChannel): Promise<string> {
+export async function countThumbReactions(
+    channel: TextChannel,
+    timeRange: "week" | "month",
+): Promise<string> {
     try {
-        const week = new Date();
-        week.setDate(week.getDate() - 7);
+        const now = new Date();
+        const pastDate = new Date();
+        if (timeRange === "week") {
+            pastDate.setDate(now.getDate() - 7);
+        } else if (timeRange === "month") {
+            pastDate.setMonth(now.getMonth() - 1);
+        }
 
-        const messages = await channel.messages.fetch({ limit: 150 });
-        const weekMessages = messages.filter((m) => m.createdAt >= week);
+        let allMessages: Collection<string, Message> = new Collection();
+        let lastId: string | undefined;
 
-        // map the number of thumbs up reactions to user ids
-        const thumbsUp = weekMessages
-            .map((m) => m.reactions.cache.get("👍"))
-            .filter((r) => r)
-            .flatMap((r) => Array.from(r!.users.cache.keys()));
+        while (true) {
+            const options: { limit: number; before?: string } = { limit: 100 };
+            if (lastId) options.before = lastId;
+            const messages = await channel.messages.fetch(options);
+            allMessages = allMessages.concat(messages);
+            if (messages.size < 100 || messages.last()!.createdAt < pastDate)
+                break;
+            lastId = messages.last()!.id;
+        }
 
-        // remove duplicates
-        const uniqueUsers = Array.from(new Set(thumbsUp));
+        const filteredMessages = allMessages.filter(
+            (m) => m.createdAt >= pastDate && m.createdAt <= now,
+        );
 
-        return `There are ${uniqueUsers.length} active cp doers in the past week`;
+        const userReactionCount = new Map<string, number>();
+
+        for (const message of filteredMessages.values()) {
+            const thumbReaction = message.reactions.cache.find(
+                (reaction) => reaction.emoji.name === "👍",
+            );
+
+            if (thumbReaction) {
+                // Fetch all users who reacted with thumbs up
+                const users = await thumbReaction.users.fetch();
+                users.forEach((user) => {
+                    if (!user.bot) {
+                        const userId = user.id;
+                        const count = userReactionCount.get(userId) || 0;
+                        userReactionCount.set(userId, count + 1);
+                    }
+                });
+            }
+        }
+
+        // Generate the response string
+        let response = `Thumb reactions for the past ${timeRange}:\n\n`;
+        userReactionCount.forEach((count, userId) => {
+            response += `<@${userId}> solves ${count} for past ${timeRange}\n`;
+        });
+
+        return response;
     } catch (error) {
-        console.error("Error counting active cp doers:", error);
-        return "An error occurred while counting active cp doers.";
-    }
-}
-
-export async function countForMonth(channel: TextChannel): Promise<string> {
-    try {
-        const month = new Date();
-        month.setDate(month.getDate() - 30);
-
-        const messages = await channel.messages.fetch({ limit: 150 });
-        const monthMessages = messages.filter((m) => m.createdAt >= month);
-
-        // map the number of thumbs up reactions to user ids
-        const thumbsUp = monthMessages
-            .map((m) => m.reactions.cache.get("👍"))
-            .filter((r) => r)
-            .flatMap((r) => Array.from(r!.users.cache.keys()));
-
-        // remove duplicates
-        const uniqueUsers = Array.from(new Set(thumbsUp));
-
-        return `There are ${uniqueUsers.length} active cp doers in the past month`;
-    } catch (error) {
-        console.error("Error counting active cp doers:", error);
-        return "An error occurred while counting active cp doers.";
+        console.error("Error counting thumb reactions:", error);
+        return "An error occurred while counting thumb reactions.";
     }
 }

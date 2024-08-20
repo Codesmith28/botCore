@@ -1,8 +1,6 @@
 import { env } from "@/config/config";
-import { countForMonth, countForWeek } from "@/utils/cpCounter";
-import { CommandInteraction, TextChannel } from "discord.js";
-
-const cpChannel = env.DISCORD_CHANNEL_ID_CP;
+import { countThumbReactions } from "@/utils/cpCounter";
+import { Client, CommandInteraction, TextChannel } from "discord.js";
 
 export async function cpCounterHandler(interaction: CommandInteraction) {
     let defered = false;
@@ -11,14 +9,17 @@ export async function cpCounterHandler(interaction: CommandInteraction) {
         defered = true;
 
         const time = interaction.options.get("time")?.value as string;
+        const cpChannel = interaction.guild?.channels.cache.get(
+            env.DISCORD_CHANNEL_ID_CP,
+        ) as TextChannel;
 
         let response: string;
         switch (time) {
             case "week":
-                response = await countForWeek(cpChannel);
+                response = await countThumbReactions(cpChannel, "week");
                 break;
             case "month":
-                response = await countForMonth(cpChannel);
+                response = await countThumbReactions(cpChannel, "month");
                 break;
             default:
                 response = "Invalid time range";
