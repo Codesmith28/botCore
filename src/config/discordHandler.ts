@@ -1,10 +1,30 @@
-import { Client, PermissionsBitField, REST, Routes } from "discord.js";
+import {
+    Client,
+    CommandInteraction,
+    PermissionsBitField,
+    REST,
+    Routes,
+} from "discord.js";
 import { env } from "@/config/config";
 import { analyticsMessageHandler } from "@/config/discord/functions/analyticsHandler";
 import { taskMessageHandler } from "@/config/discord/functions/taskHandler";
 
 import { summarizeCommand } from "@/config/discord/commands/summarize";
 import { counterCommand } from "./discord/commands/counterCommand";
+
+async function handleCheckAdmin(
+    memberPermissions: Readonly<PermissionsBitField>,
+    interaction: CommandInteraction,
+) {
+    if (!memberPermissions.has("Administrator")) {
+        await interaction.reply({
+            content: "You do not have permission to use this command.",
+            ephemeral: true,
+        });
+    }
+
+    return;
+}
 
 export function botHandler(client: Client) {
     client.once("ready", async () => {
@@ -52,14 +72,7 @@ export function botHandler(client: Client) {
                     await summarizeCommand.execute(interaction);
                     break;
                 case "count-active":
-                    if (!memberPermissions.has("Administrator")) {
-                        await interaction.reply({
-                            content:
-                                "You do not have permission to use this command.",
-                            ephemeral: true,
-                        });
-                        return;
-                    }
+                    await handleCheckAdmin(memberPermissions, interaction);
                     await counterCommand.execute(interaction);
                     break;
                 // case "otherCommand":
