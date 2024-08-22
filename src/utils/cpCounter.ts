@@ -30,9 +30,11 @@ export async function countThumbReactions(
             (m) => m.createdAt >= pastDate && m.createdAt <= now,
         );
 
-        const userReactionCount = new Map<string, number>();
+        let userReactionCount = new Map<string, number>();
 
         for (const message of filteredMessages.values()) {
+            if (String(message.id) === "1272939246956580906") continue;
+
             const thumbReaction = message.reactions.cache.find(
                 (reaction) => reaction.emoji.name === "👍",
             );
@@ -46,10 +48,16 @@ export async function countThumbReactions(
             });
         }
 
-        // Generate the response string
-        let response = `Thumb reactions for the past ${timeRange}:\n\n`;
-        userReactionCount.forEach((count, userId) => {
-            response += `<@${userId}> solves ${count} for past ${timeRange}\n`;
+        let response = `## Active CP Participants for the past ${timeRange}:\n\n`;
+
+        // Convert the map to an array of [userId, count] pairs and sort by count in descending order
+        let sortedParticipants = Array.from(userReactionCount.entries()).sort(
+            (a, b) => b[1] - a[1],
+        );
+
+        // Generate the response with rank
+        sortedParticipants.forEach(([userId, count], index) => {
+            response += `#${index + 1}   <@${userId}> - ${count} solved \n`;
         });
 
         return response;
