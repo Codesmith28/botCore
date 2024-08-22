@@ -6,6 +6,13 @@ import fs from "fs";
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY!);
 
+const generation_config = {
+    temperature: 1,
+    top_p: 0.95,
+    top_k: 64,
+    max_output_tokens: 2048,
+    response_mime_type: "text/plain",
+};
 const logFilePath = path.resolve(__dirname, "../logs/app.log");
 function logToFile(message: string) {
     fs.appendFile(logFilePath, message + "\n", (err) => {
@@ -17,7 +24,12 @@ function logToFile(message: string) {
 
 async function summarizeMessages(messages: Message[]): Promise<string> {
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+        const model = genAI.getGenerativeModel({
+            model: "gemini-pro",
+            generationConfig: generation_config,
+            systemInstruction:
+                "summarize the given conversation. Remove all the unnecessary discussions and give a to the point summary",
+        });
 
         const messageContents = messages
             .map((m) => {
@@ -29,7 +41,7 @@ async function summarizeMessages(messages: Message[]): Promise<string> {
             .filter((content) => content !== null)
             .join("\n");
 
-        const prompt = `${messageContents} \n Cover all the chat, summarize all the messages, don't skip any, use bullet points.`;
+        const prompt = `${messageContents}`;
 
         const result = await model.generateContent(prompt);
         if (!result || !result.response) {
@@ -49,7 +61,7 @@ async function summarizeMessages(messages: Message[]): Promise<string> {
 }
 
 export async function summarizeByDay(
-    channel: TextChannel | ThreadChannel,
+    channel: TextChannel | ThreadChannel
 ): Promise<string> {
     try {
         const today = new Date();
@@ -59,7 +71,7 @@ export async function summarizeByDay(
         const todayMessages = messages.filter((m) => m.createdAt >= today);
 
         const summary = await summarizeMessages(
-            Array.from(todayMessages.values()),
+            Array.from(todayMessages.values())
         );
 
         return summary;
@@ -70,7 +82,7 @@ export async function summarizeByDay(
 }
 
 export async function summarizeEntireThread(
-    thread: ThreadChannel,
+    thread: ThreadChannel
 ): Promise<string> {
     try {
         const messages = await thread.messages.fetch();
