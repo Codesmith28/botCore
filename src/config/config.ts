@@ -37,11 +37,7 @@ function loadAndCheckEnvVars() {
         const value = process.env[key];
         if (!value) {
             throw new Error(
-<<<<<<< HEAD
-                `${key} not found in environment variables or .env file`,
-=======
                 `${key} not found in environment variables or {NODE_ENV === "development" ? ".dev.env" : ".env"} file`,
->>>>>>> main
             );
         }
         env[key] = value;
