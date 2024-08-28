@@ -84,6 +84,6 @@ export function botHandler(client: Client) {
         });
 
         setInterval(() => taskMessageHandler(client), 30 * 60 * 1000);
-        setInterval(() => analyticsMessageHandler(client), 30 * 60 * 1000);
+        setInterval(() => analyticsMessageHandler(client), 24 * 60 * 60 * 1000);
     });
 }
