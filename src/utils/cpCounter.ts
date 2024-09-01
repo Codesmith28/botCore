@@ -48,12 +48,19 @@ export async function countThumbReactions(
             });
         }
 
-        let response = `## Active CP Participants for the past ${timeRange}:\n\n`;
-
         // Convert the map to an array of [userId, count] pairs and sort by count in descending order
+        // if the count is same, sort by userId in ascending order
         let sortedParticipants = Array.from(userReactionCount.entries()).sort(
-            (a, b) => b[1] - a[1],
+            (a, b) => {
+                if (a[1] === b[1]) {
+                    return a[0].localeCompare(b[0]);
+                } else {
+                    return b[1] - a[1];
+                }
+            },
         );
+
+        let response = `## Active CP Participants for the past ${timeRange}:\n\n`;
 
         // Generate the response with rank
         sortedParticipants.forEach(([userId, count], index) => {
